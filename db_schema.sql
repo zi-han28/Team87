@@ -45,8 +45,6 @@ CREATE TABLE IF NOT EXISTS bookings (
     booked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE --to delete child rows
 );
--- essential to site settings
-INSERT INTO settings (id, name, description) VALUES (1, 'Default Site Name', 'Default Site Description');
 
 COMMIT;
 

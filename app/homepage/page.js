@@ -1,6 +1,6 @@
 // Home.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import './index.css'; // Import CSS file
+import '/src/index.css'; // Import CSS file
 
 const Home = () => {
   const [messages, setMessages] = useState([

@@ -16,6 +16,173 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Apply purple background to the entire page */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #6b46c1; /* Purple-700 */
+  color: white;
+}
+
+/* Homepage section */
+.homepage {
+  width: 80%;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.homepage h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: bold;
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* Adds space between links */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+  color: #4299e1; /* Blue-500 */
+}
+
+/* Chat section */
+.chat-container {
+  width: 80%;
+  background-color: black;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 24rem; /* h-96 */
+  color: white;
+}
+
+.chat-room {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #333; /* Gray-50 */
+  border-radius: 0.5rem;
+}
+
+.message {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  max-width: 50%;
+  color: black;
+}
+
+.message.user {
+  background-color: cyan; /* Green-300 */
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.other {
+  background-color:greenyellow; /* Gray-300 */
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid gray;
+  color: black;
+  background-color: white;
+}
+
+.chat-send-btn {
+  background-color: #38a169; /* Green-500 */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.chat-send-btn:hover {
+  background-color: #2f855a; /* Green-600 */
+}
+
+/* Database section */
+.database-container {
+  width: 80%;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.database-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.post {
+  padding: 1rem;
+  border: 1px solid #cbd5e0; /* Gray-300 */
+  border-radius: 0.5rem;
+  background-color: black;
+
+}
+
+.post-title {
+  font-weight: bold;
+}
+
+.post-text {
+  font-size: 0.875rem; /* text-sm */
+  color: white;
+}
+
+.post-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.like-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.like-btn.liked {
+  background-color: #e53e3e; /* Red-500 */
+  color: white;
+}
+
+.like-btn.unliked {
+  background-color: blue; /* Gray-200 */
+}
+
+.comment-btn,
+.share-btn {
+  cursor: pointer;
+}
 /* a {
   font-weight: 500;
   color: #646cff;

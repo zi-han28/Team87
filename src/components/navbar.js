@@ -60,7 +60,7 @@ export default function Navbar() {
 
         {/* Navbar Links */}
         <div className={`items-center ${isNavOpen ? "block" : "hidden"} w-full md:flex md:w-auto md:order-1`}>
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:space-x-8 md:flex-row">
+          <ul className="flex flex-row font-medium p-4 md:p-0 mt-4 md:space-x-8 md:flex-row">
             <li><Link href="/"  className="block py-2 px-3 text-white bg-blue-700 rounded-md md:bg-transparent md:text-blue-700">Home</Link></li>
             <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">About</a></li>
             <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Services</a></li>

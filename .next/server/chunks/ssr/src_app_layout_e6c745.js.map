@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":["file:///Users/xuzihan/Documents/Team87_DNW/src/app/layout.js"],"sourcesContent":["// Root layout that wraps all pages\n// import './global.css';\n// import Navbar from '../components/navbar';\n\n// export default function RootLayout({ children }) {\n//   return (\n//     <html lang=\"en\">\n//       <body>{children}</body>\n//     </html>\n//   );\n// }"],"names":[],"mappings":"AAAA,mCAAmC;AACnC,yBAAyB;AACzB,6CAA6C;AAE7C,qDAAqD;AACrD,aAAa;AACb,uBAAuB;AACvB,gCAAgC;AAChC,cAAc;AACd,OAAO;AACP,IAAI"}},
+    {"offset": {"line": 16, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}

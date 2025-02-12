@@ -1,8 +1,6 @@
-// Homepage(/)
+// Homepage - Next.js with TailwindCSS
 "use client";
-import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
-
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -48,56 +46,49 @@ export default function Home() {
   }, [messages]);
 
   return (
-    <div className="home-container">
-      {/* Homepage Section */}
-      <div className="homepage">
-        <h1>Homepage</h1>
-        <ul className="nav-links">
-          <a href="#">Home</a>
-          <a href="#">About</a>
-          <a href="#">Services</a>
-          <a href="#">Contact</a>
-        </ul>
-      </div>
-
+    <div className="flex flex-col items-center min-h-screen text-white p-6">
       {/* Chat Section */}
-      <div className="chat-container">
-        <h2 className="chat-room">Chat Room</h2>
-        <div className="chat-messages">
+      <div className="w-4/5 bg-gray-900 p-6 shadow-lg rounded-lg flex flex-col h-96">
+        <h2 className="text-2xl font-bold mb-4">Chat Room</h2>
+        <div className="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-800 rounded-lg">
           {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.user === 'You' ? 'user' : 'other'}`}>
+            <div key={index} className={`p-2 rounded-lg max-w-xs ${msg.user === 'You' ? 'bg-green-400 self-end ml-auto' : 'bg-blue-400'}`}> 
               <strong>{msg.user}: </strong>{msg.text}
             </div>
           ))}
-          <div ref={messagesEndRef} />
         </div>
-        <div className="chat-input-container">
+        <div className="flex items-center space-x-2 mt-2">
           <input
             type="text"
-            className="chat-input"
+            className="flex-grow p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Type your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
           />
-          <button className="chat-send-btn" onClick={handleSend}>Send</button>
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            onClick={handleSend}
+          >
+            Send
+          </button>
         </div>
       </div>
 
       {/* Database Section */}
-      <div className="database-container">
-        <h2 className="database-title">Database</h2>
-        <div>
+      <div className="w-4/5 mt-8">
+        <h2 className="text-2xl font-bold">Database</h2>
+        <div className="mt-4 space-y-4">
           {posts.map(post => (
-            <div key={post.id} className="post">
-              <h3 className="post-title">{post.title}</h3>
-              <p className="post-text">{post.text}</p>
-              <div className="post-actions">
-                <button className={`like-btn ${post.liked ? 'liked' : 'unliked'}`} onClick={() => toggleLike(post.id)}>
+            <div key={post.id} className="p-4 border border-gray-400 rounded-lg bg-gray-900">
+              <h3 className="font-semibold">{post.title}</h3>
+              <p className="text-sm">{post.text}</p>
+              <div className="flex space-x-2 mt-2">
+                <button className={`px-4 py-2 rounded-lg text-white ${post.liked ? 'bg-red-500' : 'bg-blue-500'}`} onClick={() => toggleLike(post.id)}>
                   {post.liked ? 'Unlike 👎' : 'Like 👍'} ({post.likes})
                 </button>
-                <button className="comment-btn" onClick={() => addComment(post.id)}>💬 Comment ({post.comments.length})</button>
-                <button className="share-btn" onClick={() => sharePost(post.id)}>🔗 Share</button>
+                <button className="bg-yellow-500 px-4 py-2 rounded-lg text-white" onClick={() => addComment(post.id)}>💬 Comment ({post.comments.length})</button>
+                <button className="bg-gray-600 px-4 py-2 rounded-lg text-white" onClick={() => sharePost(post.id)}>🔗 Share</button>
               </div>
             </div>
           ))}
@@ -105,5 +96,4 @@ export default function Home() {
       </div>
     </div>
   );
-};
-
+}

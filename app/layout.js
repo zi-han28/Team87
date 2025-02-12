@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
-        <main className="container mx-auto p-4">
+        <main className="container bg-purple-700 mx-auto p-4">
           {children}
         </main>
       </body>

@@ -276,7 +276,7 @@ function Home() {
         columnNumber: 5
     }, this);
 }
-_s(Home, "pWgI4P1nVhqCaDlIxMOj0fXzg/c=");
+_s(Home, "vE12zRVKYgZVMmR5z2vpQOKXgRg=");
 _c = Home;
 var _c;
 __turbopack_refresh__.register(_c, "Home");

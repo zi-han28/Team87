@@ -5,15 +5,16 @@
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: __turbopack_require_stub__ } = __turbopack_context__;
 {
-// Homepage - Next.js with TailwindCSS
 __turbopack_esm__({
     "default": (()=>Home)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_refresh__.signature();
 "use client";
+;
 ;
 function Home() {
     _s();
@@ -29,14 +30,17 @@ function Home() {
     ]);
     const [newMessage, setNewMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const messagesEndRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+    const [viewingCommentsForPost, setViewingCommentsForPost] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    // Default posts
+    const defaultPosts = [
         {
             id: 1,
             title: "What is Newton's law?",
             text: "Newton's laws of motion are three fundamental principles...",
             liked: false,
             likes: 100,
-            comments: []
+            comments: [],
+            bookmarked: false
         },
         {
             id: 2,
@@ -44,7 +48,8 @@ function Home() {
             text: "The Law of Demand describes the relationship between price...",
             liked: false,
             likes: 100,
-            comments: []
+            comments: [],
+            bookmarked: false
         },
         {
             id: 3,
@@ -52,26 +57,75 @@ function Home() {
             text: "A phone consists of multiple components...",
             liked: false,
             likes: 100,
-            comments: []
+            comments: [],
+            bookmarked: false
+        },
+        {
+            id: 4,
+            title: "Which countries were most affected by COVID?",
+            text: "Many countries were...",
+            liked: false,
+            likes: 169,
+            comments: [],
+            bookmarked: false
         }
-    ]);
+    ];
+    // Load bookmarked state from localStorage and merge with default posts
+    const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "Home.useState": ()=>{
+            const savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || {};
+            return defaultPosts.map({
+                "Home.useState": (post)=>({
+                        ...post,
+                        bookmarked: savedBookmarks[post.id] || false // Use saved bookmarked state or default to false
+                    })
+            }["Home.useState"]);
+        }
+    }["Home.useState"]);
+    // Save bookmarked state to localStorage
+    const saveBookmarks = (posts)=>{
+        const bookmarks = posts.reduce((acc, post)=>{
+            acc[post.id] = post.bookmarked;
+            return acc;
+        }, {});
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    };
     const toggleLike = (postId)=>{
-        setPosts(posts.map((post)=>post.id === postId ? {
+        const updatedPosts = posts.map((post)=>post.id === postId ? {
                 ...post,
                 liked: !post.liked,
                 likes: post.liked ? post.likes - 1 : post.likes + 1
-            } : post));
+            } : post);
+        setPosts(updatedPosts);
+    };
+    const toggleBookmark = (postId)=>{
+        const updatedPosts = posts.map((post)=>post.id === postId ? {
+                ...post,
+                bookmarked: !post.bookmarked
+            } : post);
+        setPosts(updatedPosts);
+        saveBookmarks(updatedPosts); // Save bookmarked state to localStorage
     };
     const addComment = (postId)=>{
         const comment = prompt('Enter your comment:');
         if (comment && comment.trim()) {
-            setPosts(posts.map((post)=>post.id === postId ? {
+            const updatedPosts = posts.map((post)=>post.id === postId ? {
                     ...post,
                     comments: [
                         ...post.comments,
                         comment
                     ]
-                } : post));
+                } : post);
+            setPosts(updatedPosts);
+        }
+    };
+    const viewComments = (postId)=>{
+        if (viewingCommentsForPost === postId) {
+            // If the comments for this post are already being viewed, hide them
+            setViewingCommentsForPost(null);
+        } else {
+            // Otherwise, show the comments for this post
+            setViewingCommentsForPost(postId);
         }
     };
     const sharePost = (postId)=>{
@@ -109,7 +163,7 @@ function Home() {
                         children: "Chat Room"
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 52,
+                        lineNumber: 95,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -124,19 +178,19 @@ function Home() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.js",
-                                        lineNumber: 56,
+                                        lineNumber: 99,
                                         columnNumber: 15
                                     }, this),
                                     msg.text
                                 ]
                             }, index, true, {
                                 fileName: "[project]/app/page.js",
-                                lineNumber: 55,
+                                lineNumber: 98,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 53,
+                        lineNumber: 96,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -151,7 +205,7 @@ function Home() {
                                 onKeyPress: (e)=>e.key === 'Enter' && handleSend()
                             }, void 0, false, {
                                 fileName: "[project]/app/page.js",
-                                lineNumber: 61,
+                                lineNumber: 104,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -160,19 +214,19 @@ function Home() {
                                 children: "Send"
                             }, void 0, false, {
                                 fileName: "[project]/app/page.js",
-                                lineNumber: 69,
+                                lineNumber: 112,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 60,
+                        lineNumber: 103,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.js",
-                lineNumber: 51,
+                lineNumber: 94,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -183,7 +237,7 @@ function Home() {
                         children: "Database"
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 80,
+                        lineNumber: 123,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -196,7 +250,7 @@ function Home() {
                                         children: post.title
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.js",
-                                        lineNumber: 84,
+                                        lineNumber: 127,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -204,7 +258,7 @@ function Home() {
                                         children: post.text
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.js",
-                                        lineNumber: 85,
+                                        lineNumber: 128,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -221,20 +275,29 @@ function Home() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 87,
+                                                lineNumber: 130,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 className: "bg-yellow-500 px-4 py-2 rounded-lg text-white",
                                                 onClick: ()=>addComment(post.id),
+                                                children: "💬 Comment"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.js",
+                                                lineNumber: 136,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "bg-green-500 px-4 py-2 rounded-lg text-white",
+                                                onClick: ()=>viewComments(post.id),
                                                 children: [
-                                                    "💬 Comment (",
+                                                    "💬 View Comments (",
                                                     post.comments.length,
                                                     ")"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 90,
+                                                lineNumber: 142,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -243,40 +306,104 @@ function Home() {
                                                 children: "🔗 Share"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.js",
-                                                lineNumber: 91,
+                                                lineNumber: 148,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: `px-4 py-2 rounded-lg text-white ${post.bookmarked ? 'bg-purple-500' : 'bg-gray-500'}`,
+                                                onClick: ()=>toggleBookmark(post.id),
+                                                children: post.bookmarked ? 'Unbookmark ❌' : 'Bookmark 📌'
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.js",
+                                                lineNumber: 154,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.js",
-                                        lineNumber: 86,
+                                        lineNumber: 129,
                                         columnNumber: 15
+                                    }, this),
+                                    viewingCommentsForPost === post.id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "mt-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                className: "font-semibold",
+                                                children: "Comments:"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.js",
+                                                lineNumber: 164,
+                                                columnNumber: 11
+                                            }, this),
+                                            post.comments.length > 0 ? post.comments.map((comment, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "p-2 bg-gray-800 rounded-lg mt-2",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-sm",
+                                                        children: comment
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/page.js",
+                                                        lineNumber: 168,
+                                                        columnNumber: 17
+                                                    }, this)
+                                                }, index, false, {
+                                                    fileName: "[project]/app/page.js",
+                                                    lineNumber: 167,
+                                                    columnNumber: 15
+                                                }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm text-gray-400",
+                                                children: "No comments yet."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.js",
+                                                lineNumber: 172,
+                                                columnNumber: 13
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.js",
+                                        lineNumber: 163,
+                                        columnNumber: 9
                                     }, this)
                                 ]
                             }, post.id, true, {
                                 fileName: "[project]/app/page.js",
-                                lineNumber: 83,
+                                lineNumber: 126,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/page.js",
-                        lineNumber: 81,
+                        lineNumber: 124,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.js",
-                lineNumber: 79,
+                lineNumber: 122,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-4/5 mt-8",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                    href: "/bookmark",
+                    className: "bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600",
+                    children: "View Bookmarked Posts"
+                }, void 0, false, {
+                    fileName: "[project]/app/page.js",
+                    lineNumber: 183,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/page.js",
+                lineNumber: 182,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.js",
-        lineNumber: 49,
+        lineNumber: 92,
         columnNumber: 5
     }, this);
 }
-_s(Home, "pWgI4P1nVhqCaDlIxMOj0fXzg/c=");
+_s(Home, "MdhbDhuVjLzV9SJQiZ3zZAwWjqo=");
 _c = Home;
 var _c;
 __turbopack_refresh__.register(_c, "Home");

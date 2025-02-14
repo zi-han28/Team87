@@ -1,5 +1,6 @@
 {
   "pages": {
+<<<<<<< HEAD
     "/profile/page": [
       "static/chunks/src_app_global_ed6a4d.css",
       "static/chunks/node_modules_next_dist_532a10._.js",
@@ -7,6 +8,21 @@
       "static/chunks/src_app_layout_61af54.js",
       "static/chunks/src_app_profile_page_3c7ffd.js",
       "static/chunks/src_app_profile_page_40c463.js",
+=======
+<<<<<<<< HEAD:.next/server/app/_not-found/page/app-build-manifest.json
+    "/_not-found/page": [
+      "static/chunks/node_modules_next_dist_5d579c._.js",
+      "static/chunks/node_modules_next_dist_client_components_not-found-error_61af54.js",
+========
+    "/profile/page": [
+      "static/chunks/app_global_d684f9.css",
+      "static/chunks/node_modules_next_dist_532a10._.js",
+      "static/chunks/_382c4a._.js",
+      "static/chunks/app_layout_61af54.js",
+      "static/chunks/app_profile_page_1274b4.js",
+      "static/chunks/app_profile_page_eaa42c.js",
+>>>>>>>> 572c409fd89ab8d11d58a8b26b9065f9502e4bb6:.next/server/app/profile/page/app-build-manifest.json
+>>>>>>> 572c409fd89ab8d11d58a8b26b9065f9502e4bb6
       "static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js",
       "static/chunks/node_modules_next_dist_compiled_107ce8._.js",
       "static/chunks/node_modules_next_dist_client_523921._.js",

@@ -6,7 +6,8 @@ import bcrypt from 'bcryptjs';
 // Function to open the SQLite database
 async function openDb() {
     return open({
-        filename: './database.db',
+        // Absolute path
+        filename: process.cwd() + '/database.db',
         driver: sqlite3.Database
     });
 }

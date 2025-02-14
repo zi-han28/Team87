@@ -15,7 +15,7 @@ export default function SignUp() {
     const userData = { email, username, password };
 
     try {
-      const response = await fetch("http://localhost:5030/signup", {
+        const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

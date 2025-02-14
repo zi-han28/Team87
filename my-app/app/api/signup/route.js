@@ -1,65 +1,39 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import { NextResponse } from 'next/server';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+import bcrypt from 'bcryptjs';
 
-const app = express();
-const port = 5030;
+// Function to open the SQLite database
+async function openDb() {
+    return open({
+        filename: './database.db',
+        driver: sqlite3.Database
+    });
+}
 
-app.use(cors());
-app.use(bodyParser.json());
+// Handle POST requests to /api/login
+export async function POST(req) {
+    try {
+        const { email, password } = await req.json();
+        const db = await openDb();
 
-// Connect to SQLite database
-let db = new sqlite3.Database('./database.db', (err) => {
-    if (err) {
-        console.error(err.message);
-    }
-    console.log('Connected to the SQLite database.');
-});
+        // Find user by email
+        const user = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
 
-// Create users table if it doesn't exist
-db.run(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE NOT NULL,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
-)`);
-
-// signUp endpoint
-app.post('/signup', (req, res) => {
-    const { email, username, password } = req.body;
-    const query = `INSERT INTO users (email, username, password) VALUES (?, ?, ?)`;
-    db.run(query, [email, username, password], function(err) {
-        if (err) {
-            if(err.code == 'SQLITE_CONSTRAINT'){
-                return res.status(400).json({ message: 'Account already exist. Try logging in' });
-            }
-            // Handle other types of errors
-            return res.status(500).json({ message: 'An error occurred. Please try again.' });
+        if (!user) {
+            return NextResponse.json({ message: "Invalid email or password." }, { status: 400 });
         }
-        res.json({ message: 'User created successfully', id: this.lastID });
-    });
-});
 
-//logIn endpoint
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    const query = `SELECT * FROM users WHERE email = ?`;
-  
-    db.get(query, [email], (err, row) => {
-      if (err) {
-        return res.status(500).json({ message: 'An error occurred. Please try again.' });
-      }
-      if (!row) {
-        return res.status(400).json({ message: 'Invalid email or password.' });
-      }
-      if (row.password !== password) { // In a real app, use bcrypt to compare hashed passwords
-        return res.status(400).json({ message: 'Invalid email or password.' });
-      }
-      res.json({ message: 'Login successful', user: row });
-    });
-  });
+        // Compare hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+        if (!isMatch) {
+            return NextResponse.json({ message: "Invalid email or password." }, { status: 400 });
+        }
+
+        return NextResponse.json({ message: "Login successful", user: { id: user.id, email: user.email, username: user.username } }, { status: 200 });
+    } catch (error) {
+        console.error("Login error:", error);
+        return NextResponse.json({ message: "An error occurred. Please try again." }, { status: 500 });
+    }
+}

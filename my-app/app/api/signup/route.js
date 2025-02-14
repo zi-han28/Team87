@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+//import { open } from 'sqlite';
 import bcrypt from 'bcryptjs';
 
 // Function to open the SQLite database
 async function openDb() {
     return open({
         // Absolute path
-        filename: process.cwd() + '/database.db',
+        filename: process.cwd() + '/lib/database.db',
         driver: sqlite3.Database
     });
 }

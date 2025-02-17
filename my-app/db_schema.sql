@@ -1,25 +1,25 @@
 -- Create users table
 CREATE TABLE IF NOT EXISTS User (
-    user_username VARCHAR(20) PRIMARY KEY,
-    user_firstname VARCHAR(20) NOT NULL,
-    user_lastname VARCHAR(20) NOT NULL,
-    user_email VARCHAR(50) NOT NULL UNIQUE,
-    user_password VARCHAR(255) NOT NULL,
+    user_username TEXT PRIMARY KEY,
+    user_firstname TEXT NOT NULL,
+    user_lastname TEXT NOT NULL,
+    user_email TEXT NOT NULL UNIQUE,
+    user_password TEXT NOT NULL,
     user_badges TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Chatroom (
-    chatroom_name VARCHAR(50) PRIMARY KEY,
-    chatroom_description VARCHAR(200) NOT NULL,
+    chatroom_name TEXT PRIMARY KEY,
+    chatroom_description TEXT NOT NULL,
     chatroom_type TEXT NOT NULL,
-    user_username VARCHAR(20) NOT NULL,
+    user_username TEXT NOT NULL,
     FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Messages (
-    msg_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_username VARCHAR(20) NOT NULL,
-    chatroom_name VARCHAR(50) NOT NULL,
+    msg_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_username TEXT NOT NULL,
+    chatroom_name TEXT NOT NULL,
     msg_content TEXT NOT NULL,
     msg_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE,
@@ -27,19 +27,18 @@ CREATE TABLE IF NOT EXISTS Messages (
 );
 
 CREATE TABLE IF NOT EXISTS Post (
-    post_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    post_id INTEGER PRIMARY KEY AUTOINCREMENT,
     post_content TEXT NOT NULL,
-    user_username VARCHAR(20) NOT NULL,
-    share_amount INT NOT NULL DEFAULT 0,
-    view_amount INT NOT NULL DEFAULT 0,
-    like_amount INT NOT NULL DEFAULT 0,
-    post_savedindatabase BOOLEAN NOT NULL DEFAULT FALSE,
+    user_username TEXT NOT NULL,
+    share_amount INTEGER NOT NULL DEFAULT 0,
+    view_amount INTEGER NOT NULL DEFAULT 0,
+    like_amount INTEGER NOT NULL DEFAULT 0,
+    post_savedindatabase INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE
 );
 
-INSERT INTO users (email, username, password) 
-VALUES ('test@example.com', 'testuser', 'password')
-ON CONFLICT(email) DO NOTHING;
+INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
+('testuser', 'Test', 'User', 'test@example.com', 'password', NULL);
 
 INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
 ('john_doe', 'John', 'Doe', 'john.doe@example.com', 'hashedpassword1', 'Gold, Contributor'),
@@ -57,6 +56,6 @@ INSERT INTO Messages (user_username, chatroom_name, msg_content) VALUES
 ('alex_wong', 'Book Club', 'Has anyone read the latest sci-fi novel?');
 
 INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES
-('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, TRUE),
-('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, TRUE),
-('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, TRUE);
+('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 1),
+('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 1),
+('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 1);

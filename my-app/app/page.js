@@ -9,14 +9,20 @@ export default function Home() {
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
   
-  // ✅ Fetch homepage-relevant data (not full posts)
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);  // ✅ Added loading state
 
   useEffect(() => {
-    fetch("/api/home")  // Fetch only homepage data
+    fetch("/api/home")
       .then((res) => res.json())
-      .then((data) => setPosts(data))
-      .catch((error) => console.error("Error fetching homepage data:", error));
+      .then((data) => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching homepage posts:", error);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -52,20 +58,22 @@ export default function Home() {
       <div className="w-4/5 mt-8">
         <h2 className="text-2xl font-bold">Latest Posts</h2>
         <div className="mt-4 space-y-4">
-          {posts.length > 0 ? (
+          {loading ? (
+            <p>Loading homepage posts...</p>
+          ) : posts.length > 0 ? (
             posts.map(post => (
-              <div key={post.id} className="p-4 border border-gray-400 rounded-lg bg-gray-900">
-                <h3 className="font-semibold">{post.title}</h3>
-                <p className="text-sm">{post.text}</p>
+              <div key={post.post_id} className="p-4 border border-gray-400 rounded-lg bg-gray-900">
+                <h3 className="font-semibold">Posted by: {post.user_username}</h3>
+                <p className="text-sm">{post.post_content}</p>
                 <div className="flex space-x-2 mt-2">
                   <button className="bg-blue-500 px-4 py-2 rounded-lg text-white">
-                    View More
+                    👍 {post.like_amount} Likes
                   </button>
                 </div>
               </div>
             ))
           ) : (
-            <p>Loading homepage posts...</p>
+            <p>No posts available.</p>
           )}
         </div>
       </div>

@@ -66,19 +66,41 @@ function HistoryPage() {
         }
     ];
     // Function to load liked posts
+    // const loadLikedPosts = () => {
+    //   if (typeof window !== "undefined") {
+    //     const likedData = JSON.parse(localStorage.getItem('liked')) || {};
+    //     const posts = defaultPosts.map(post => ({
+    //       ...post,
+    //       likes: likedData[post.id] || false,
+    //       likes: likedData[post.id]?.likes || post.likes
+    //     }));
+    //     // Filter posts that have been liked
+    //     const likedPosts = posts.filter(post => post.liked);
+    //     // Sort liked posts in descending order by likes
+    //     const sortedLikedPosts = likedPosts.sort((a, b) => b.likes - a.likes);
+    //     setLikedPosts(sortedLikedPosts);
+    //   }
+    // };
+    // const loadLikedPosts = () => {
+    //   if (typeof window !== "undefined") {
+    //     const likedData = JSON.parse(localStorage.getItem('liked')) || {};
+    //     const posts = defaultPosts.map(post => ({
+    //       ...post,
+    //       liked: likedData[post.id]?.liked || false,
+    //       likes: likedData[post.id]?.likes || post.likes // Load updated likes count
+    //     }));
+    //     const likedPosts = posts.filter(post => post.liked);
+    //     setLikedPosts(likedPosts.sort((a, b) => b.likes - a.likes));
+    //   }
+    // };
     const loadLikedPosts = ()=>{
-        if ("TURBOPACK compile-time truthy", 1) {
-            const liked = JSON.parse(localStorage.getItem('liked')) || {};
-            const posts = defaultPosts.map((post)=>({
-                    ...post,
-                    liked: liked[post.id] || false
-                }));
-            // Filter posts that have been liked
-            const likedPosts = posts.filter((post)=>post.liked);
-            // Sort liked posts in descending order by likes
-            const sortedLikedPosts = likedPosts.sort((a, b)=>b.likes - a.likes);
-            setLikedPosts(sortedLikedPosts);
-        }
+        const savedLikes = JSON.parse(localStorage.getItem('likesData')) || {};
+        const likedPosts = defaultPosts.map((post)=>({
+                ...post,
+                liked: savedLikes[post.id]?.liked || false,
+                likes: savedLikes[post.id]?.likes ?? post.likes
+            })).filter((post)=>post.liked);
+        setLikedPosts(likedPosts);
     };
     // Load liked posts on mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -92,6 +114,7 @@ function HistoryPage() {
             const handleLikedStateChange = {
                 "HistoryPage.useEffect.handleLikedStateChange": ()=>{
                     if ("TURBOPACK compile-time truthy", 1) {
+                        loadLikedPosts();
                         const savedPosts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
                         // Filter posts that have been liked
                         const liked = savedPosts.filter({
@@ -121,7 +144,7 @@ function HistoryPage() {
                 children: "Liked Posts History"
             }, void 0, false, {
                 fileName: "[project]/app/history/page.js",
-                lineNumber: 103,
+                lineNumber: 135,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -134,7 +157,7 @@ function HistoryPage() {
                                 children: post.title
                             }, void 0, false, {
                                 fileName: "[project]/app/history/page.js",
-                                lineNumber: 108,
+                                lineNumber: 140,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -142,7 +165,7 @@ function HistoryPage() {
                                 children: post.text
                             }, void 0, false, {
                                 fileName: "[project]/app/history/page.js",
-                                lineNumber: 109,
+                                lineNumber: 141,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -158,7 +181,7 @@ function HistoryPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/history/page.js",
-                                        lineNumber: 111,
+                                        lineNumber: 143,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -170,7 +193,7 @@ function HistoryPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/history/page.js",
-                                        lineNumber: 114,
+                                        lineNumber: 146,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -178,7 +201,7 @@ function HistoryPage() {
                                         children: "🔗 Share"
                                     }, void 0, false, {
                                         fileName: "[project]/app/history/page.js",
-                                        lineNumber: 117,
+                                        lineNumber: 149,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -186,36 +209,36 @@ function HistoryPage() {
                                         children: post.bookmarked ? 'Unbookmark ❌' : 'Bookmark 📌'
                                     }, void 0, false, {
                                         fileName: "[project]/app/history/page.js",
-                                        lineNumber: 120,
+                                        lineNumber: 152,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/history/page.js",
-                                lineNumber: 110,
+                                lineNumber: 142,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, post.id, true, {
                         fileName: "[project]/app/history/page.js",
-                        lineNumber: 107,
+                        lineNumber: 139,
                         columnNumber: 13
                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     children: "No liked posts found."
                 }, void 0, false, {
                     fileName: "[project]/app/history/page.js",
-                    lineNumber: 127,
+                    lineNumber: 159,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/history/page.js",
-                lineNumber: 104,
+                lineNumber: 136,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/history/page.js",
-        lineNumber: 102,
+        lineNumber: 134,
         columnNumber: 5
     }, this);
 }

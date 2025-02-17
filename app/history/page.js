@@ -52,23 +52,53 @@ export default function HistoryPage() {
   ];
 
   // Function to load liked posts
+  // const loadLikedPosts = () => {
+  //   if (typeof window !== "undefined") {
+  //     const likedData = JSON.parse(localStorage.getItem('liked')) || {};
+  //     const posts = defaultPosts.map(post => ({
+  //       ...post,
+  //       likes: likedData[post.id] || false,
+  //       likes: likedData[post.id]?.likes || post.likes
+  //     }));
+
+  //     // Filter posts that have been liked
+  //     const likedPosts = posts.filter(post => post.liked);
+
+  //     // Sort liked posts in descending order by likes
+  //     const sortedLikedPosts = likedPosts.sort((a, b) => b.likes - a.likes);
+
+  //     setLikedPosts(sortedLikedPosts);
+  //   }
+  // };
+
+  // const loadLikedPosts = () => {
+  //   if (typeof window !== "undefined") {
+  //     const likedData = JSON.parse(localStorage.getItem('liked')) || {};
+      
+  //     const posts = defaultPosts.map(post => ({
+  //       ...post,
+  //       liked: likedData[post.id]?.liked || false,
+  //       likes: likedData[post.id]?.likes || post.likes // Load updated likes count
+  //     }));
+  
+  //     const likedPosts = posts.filter(post => post.liked);
+  //     setLikedPosts(likedPosts.sort((a, b) => b.likes - a.likes));
+  //   }
+  // };
+
   const loadLikedPosts = () => {
-    if (typeof window !== "undefined") {
-      const liked = JSON.parse(localStorage.getItem('liked')) || {};
-      const posts = defaultPosts.map(post => ({
+    const savedLikes = JSON.parse(localStorage.getItem('likesData')) || {};
+    const likedPosts = defaultPosts
+      .map(post => ({
         ...post,
-        liked: liked[post.id] || false
-      }));
-
-      // Filter posts that have been liked
-      const likedPosts = posts.filter(post => post.liked);
-
-      // Sort liked posts in descending order by likes
-      const sortedLikedPosts = likedPosts.sort((a, b) => b.likes - a.likes);
-
-      setLikedPosts(sortedLikedPosts);
-    }
+        liked: savedLikes[post.id]?.liked || false,
+        likes: savedLikes[post.id]?.likes ?? post.likes, // Keep updated likes count
+      }))
+      .filter(post => post.liked);
+  
+    setLikedPosts(likedPosts);
   };
+  
 
   // Load liked posts on mount
   useEffect(() => {
@@ -79,7 +109,9 @@ export default function HistoryPage() {
   useEffect(() => {
     const handleLikedStateChange = () => {
       if (typeof window !== "undefined") {
+        loadLikedPosts();
         const savedPosts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
+
   
         // Filter posts that have been liked
         const liked = savedPosts.filter(post => post.liked);

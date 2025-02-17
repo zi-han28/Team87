@@ -27,11 +27,12 @@ export default function Home() {
   // Load bookmarked state from localStorage and merge with default posts
   const [posts, setPosts] = useState(() => {
     const savedBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || {};
-    const likedPosts = JSON.parse(localStorage.getItem('liked')) || {};
+    const likedPosts = JSON.parse(localStorage.getItem('likesData')) || {};
     return defaultPosts.map(post => ({
       ...post,
       bookmarked: savedBookmarks[post.id] || false, // Use saved bookmarked state or default to false,
-      liked: likedPosts[post.id] || false // Use saved bookmarked state or default to false
+      liked: likedPosts[post.id]?.liked || false, // Use saved bookmarked state or default to false
+      likes: likedPosts[post.id]?.likes ?? post.likes, // Keep likes count if available
     }));
   });
 
@@ -60,26 +61,51 @@ export default function Home() {
     saveBookmarks(updatedPosts); // Save bookmarked state to localStorage
   };
 
+  // const saveLikes = (posts) => {
+  //   const liked = posts.reduce((acc, post) => {
+  //     acc[post.id] = post.liked;
+  //     return acc;
+  //   }, {});
+  //   localStorage.setItem('liked', JSON.stringify(liked));
+  // }; 
+
   const saveLikes = (posts) => {
     const liked = posts.reduce((acc, post) => {
-      acc[post.id] = post.liked;
+      acc[post.id] = { liked: post.liked, likes: post.likes };
       return acc;
     }, {});
-    localStorage.setItem('liked', JSON.stringify(liked));
-  }; 
+    localStorage.setItem('likesData', JSON.stringify(liked));
+  };
+  
+
+  // const toggleLike = (postId) => {
+  //   const updatedPosts = posts.map(post => 
+  //     post.id === postId ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 } : post
+  //   );
+  //   setPosts(updatedPosts);
+  //   saveLikes(updatedPosts);
+
+  //   // Dispatch a custom event to notify other pages (e.g., History page)
+  //   if (typeof window !== "undefined") {
+  //     window.dispatchEvent(new Event('likedStateChanged'));
+  //   }
+  // };
 
   const toggleLike = (postId) => {
-    const updatedPosts = posts.map(post => 
-      post.id === postId ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 } : post
+    const updatedPosts = posts.map(post =>
+      post.id === postId 
+        ? { ...post, liked: !post.liked, likes: post.liked ? post.likes - 1 : post.likes + 1 } 
+        : post
     );
     setPosts(updatedPosts);
     saveLikes(updatedPosts);
-
-    // Dispatch a custom event to notify other pages (e.g., History page)
+  
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event('likedStateChanged'));
     }
   };
+  
+  
 
   const addComment = (postId) => {
     const comment = prompt('Enter your comment:');
@@ -219,6 +245,13 @@ export default function Home() {
           View Liked Posts History
         </Link>
       </div>
+
+      {/* Link to Posting Area */}
+<div className="w-4/5 mt-8">
+  <Link href="/postingarea" className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+    Go to Posting Area
+  </Link>
+</div>
     </div>
   );
 }

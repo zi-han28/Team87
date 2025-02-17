@@ -28,3 +28,28 @@ export async function GET() {
         return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });
     }
 }
+
+// Handle POST request to toggle like
+export async function POST(req) {
+    try {
+        const { post_id, action } = await req.json();  // Get post_id & action (like/unlike)
+        const db = await openDb();
+
+        // Increase or decrease like count based on action
+        await new Promise((resolve, reject) => {
+            db.run(
+                `UPDATE Post SET like_amount = like_amount ${action === 'like' ? '+ 1' : '- 1'} WHERE post_id = ? AND like_amount > 0`,
+                [post_id],
+                function (err) {
+                    if (err) reject(err);
+                    else resolve();
+                }
+            );
+        });
+
+        return NextResponse.json({ message: `Post ${action}d successfully!` });
+    } catch (error) {
+        console.error("Database error:", error);
+        return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });
+    }
+}

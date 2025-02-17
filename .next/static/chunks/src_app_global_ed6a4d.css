@@ -1,0 +1,184 @@
+/* [project]/src/app/global.css [app-client] (css) */
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: #ffffffde;
+  background-color: #6495ed;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #6b46c1;
+  color: #fff;
+}
+
+.homepage {
+  width: 80%;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.homepage h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: color .3s ease-in-out;
+}
+
+.nav-links a:hover {
+  color: #4299e1;
+}
+
+.chat-container {
+  width: 80%;
+  background-color: #000;
+  padding: 1rem;
+  box-shadow: 0 4px 6px #0000001a;
+  border-radius: .5rem;
+  display: flex;
+  flex-direction: column;
+  height: 24rem;
+  color: #fff;
+}
+
+.chat-room {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+  color: #fff;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #333;
+  border-radius: .5rem;
+}
+
+.message {
+  padding: .5rem;
+  border-radius: .5rem;
+  max-width: 50%;
+  color: #000;
+}
+
+.message.user {
+  background-color: #0ff;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.other {
+  background-color: #adff2f;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: .5rem;
+  border-radius: .5rem;
+  border: 1px solid gray;
+  color: #000;
+  background-color: #fff;
+}
+
+.chat-send-btn {
+  background-color: #38a169;
+  color: #fff;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  transition: background-color .3s ease-in-out;
+}
+
+.chat-send-btn:hover {
+  background-color: #2f855a;
+}
+
+.database-container {
+  width: 80%;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.database-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.post {
+  padding: 1rem;
+  border: 1px solid #cbd5e0;
+  border-radius: .5rem;
+  background-color: #000;
+}
+
+.post-title {
+  font-weight: bold;
+}
+
+.post-text {
+  font-size: .875rem;
+  color: #fff;
+}
+
+.post-actions {
+  display: flex;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
+.like-btn {
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+
+.like-btn.liked {
+  background-color: #e53e3e;
+  color: #fff;
+}
+
+.like-btn.unliked {
+  background-color: #00f;
+}
+
+.comment-btn, .share-btn {
+  cursor: pointer;
+}
+
+
+/*# sourceMappingURL=src_app_global_ed6a4d.css.map*/

@@ -11,9 +11,9 @@ export default function Home() {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [likedPosts, setLikedPosts] = useState(new Set()); // ✅ Track liked posts
+  const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
 
-  // ✅ Fetch posts from database
+  // Fetch posts from database
   useEffect(() => {
     fetch("/api/home")
       .then((res) => res.json())
@@ -27,7 +27,7 @@ export default function Home() {
       });
   }, []);
 
-  // ✅ Handle Like Button Toggle (Like & Unlike)
+  // Handle Like Button Toggle (Like & Unlike)
   const handleLikeToggle = async (post_id) => {
     const isLiked = likedPosts.has(post_id);
     const action = isLiked ? "unlike" : "like";
@@ -58,7 +58,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center min-h-screen text-white p-6">
-      {/* ✅ Chat Section (Hardcoded) */}
       <div className="w-4/5 bg-gray-900 p-6 shadow-lg rounded-lg flex flex-col h-96">
         <h2 className="text-2xl font-bold mb-4">Chat Room</h2>
         <div className="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-800 rounded-lg">
@@ -85,7 +84,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ✅ Database Section */}
+      {/* Database Section */}
       <div className="w-4/5 mt-8">
         <h2 className="text-2xl font-bold">Latest Posts</h2>
         <div className="mt-4 space-y-4">

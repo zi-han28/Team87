@@ -56,6 +56,6 @@ INSERT INTO Messages (user_username, chatroom_name, msg_content) VALUES
 ('alex_wong', 'Book Club', 'Has anyone read the latest sci-fi novel?');
 
 INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES
-('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 1),
-('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 1),
-('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 1);
+('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0),
+('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 0),
+('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0);

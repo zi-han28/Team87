@@ -1,56 +1,113 @@
+"use client";
+import React, { useState, useEffect } from 'react';
+
+export default function PostingArea() {
+  const [posts, setPosts] = useState([]);
+  //const [newPostTitle, setNewPostTitle] = useState('');
+  const [newPostText, setNewPostText] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  // Fetch posts from the database
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("/api/postingarea");
+        console.log("Fetching posts..."); 
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts: ${response.statusText}");
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  // Handle adding a new post
+  const handleAddPost = async () => {
+    if (newPostText.trim()) {
+        const newPost = {
+            post_content: newPostText,  // API expects `post_content`, not `text`
+            user_username: "test_user" // Replace with actual username from auth context
+          };
+          
+      
+      try {
+        const response = await fetch("/api/postingarea", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPost),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add post");
+        }
+
+        const savedPost = await response.json();
+        setPosts([savedPost, ...posts]); // Add the new post at the top
+        //setNewPostTitle('');
+        setNewPostText('');
+      } catch (error) {
+        console.error("Error adding post:", error);
+      }
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center min-h-screen text-white p-6">
+      <h1 className="text-3xl font-bold mb-8">Posting Area</h1>
+
+      {/* Form to create a new post */}
+      <div className="w-4/5 bg-gray-900 p-6 shadow-lg rounded-lg mb-8">
+        <h2 className="text-2xl font-bold mb-4">Create a New Post</h2>
+        <div className="space-y-4">
+          
+          <textarea
+            className="w-full p-2 border rounded-lg text-black"
+            placeholder="Enter post text..."
+            value={newPostText}
+            onChange={(e) => setNewPostText(e.target.value)}
+            rows={4}
+          />
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleAddPost}>
+            Add Post
+          </button>
+        </div>
+      </div>
+
+      {/* Display all posts */}
+      <div className="w-4/5">
+        <h2 className="text-2xl font-bold mb-4">All Posts</h2>
+        {loading ? (
+          <p>Loading posts...</p>
+        ) : posts.length > 0 ? (
+            posts.map(post => (
+              <div key={post.post_id} className="p-4 border border-gray-400 rounded-lg bg-gray-900">
+                <h3 className="font-semibold">Posted by: {post.user_username}</h3>
+                <p className="text-sm">{post.post_content}</p>
+                
+              </div>
+            ))
+          ) : (
+            <p>No posts available.</p>
+          )}
+        </div>
+    </div>
+  );
+}
 
 
 // "use client";
 // import React, { useState, useEffect } from 'react';
 
 // export default function PostingArea() {
-//   // Default posts
-//   const defaultPosts = [
-//     {
-//       id: 1,
-//       title: "What is Newton's law?",
-//       text: "Newton's laws of motion are three fundamental principles...",
-//       liked: false,
-//       likes: 100,
-//       comments: [
-//         "Great explanation!",
-//         "I learned a lot from this post.",
-//         "Can you provide more examples?"
-//       ],
-//       bookmarked: false
-//     },
-//     {
-//       id: 2,
-//       title: "What is Law of Demand?",
-//       text: "The Law of Demand describes the relationship between price...",
-//       liked: false,
-//       likes: 100,
-//       comments: ["Which component is the most important?"],
-//       bookmarked: false
-//     },
-//     {
-//       id: 3,
-//       title: "What components make up a phone?",
-//       text: "A phone consists of multiple components...",
-//       liked: false,
-//       likes: 100,
-//       comments: [
-//         "This is a very timely topic.",
-//         "How did the pandemic affect the global economy?"
-//       ],
-//       bookmarked: false
-//     },
-//     {
-//       id: 4,
-//       title: "Which countries were most affected by COVID?",
-//       text: "Many countries were...",
-//       liked: false,
-//       likes: 169,
-//       comments: [],
-//       bookmarked: false
-//     }
-//   ];
-
+  
 //   // Load posts from localStorage or initialize with defaultPosts
 //   const [posts, setPosts] = useState(() => {
 //     if (typeof window !== "undefined") {

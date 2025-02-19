@@ -37,6 +37,16 @@ CREATE TABLE IF NOT EXISTS Post (
     FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS Likes (
+    user_username TEXT NOT NULL,
+    post_id INTEGER NOT NULL,
+    liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_username, post_id),
+    FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE
+);
+
+
 INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
 ('testuser', 'Test', 'User', 'test@example.com', 'password', NULL);
 
@@ -59,3 +69,10 @@ INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_a
 ('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0),
 ('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 0),
 ('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0);
+
+INSERT INTO Likes (user_username, post_id) VALUES
+('testuser', 1),
+('alex_wong', 1),
+('john_doe', 2),
+('jane_smith', 3),
+('testuser', 3);

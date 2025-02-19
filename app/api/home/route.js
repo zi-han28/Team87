@@ -16,7 +16,8 @@ export async function GET(req) {
         const db = await openDb();
         const posts = await new Promise((resolve, reject) => {
             db.all(`SELECT post_id, post_content, share_amount, view_amount, like_amount, user_username, post_savedindatabase 
-                FROM Post ORDER BY post_id DESC LIMIT 5`, 
+                FROM Post ORDER BY post_id 
+                DESC LIMIT 5`, 
             (err, rows) => {
                 if (err) reject(err);
                 else resolve(rows);
@@ -33,8 +34,9 @@ export async function GET(req) {
 
 // Handle POST request to toggle like or save
 export async function POST(req) {
+    const { post_id, action, user_username } = await req.json();  // Get post_id & action (like/unlike or save/unsave)
     try {
-        const { post_id, action, user_username } = await req.json();  // Get post_id & action (like/unlike or save/unsave)
+        
         const db = await openDb();
 
         console.log(`Received action: ${action} for post_id: ${post_id}`);
@@ -49,15 +51,49 @@ export async function POST(req) {
                 }
             });
         });
-       // console.log(`Current post_savedindatabase value for post_id ${post_id}:`, currentPost?.post_savedindatabase);
-
-        if (action === 'like' || action === 'unlike') {
-            // Handle like/unlike
+       
+        if (action === "like") {
+            // Insert a new like into the Likes table
             await new Promise((resolve, reject) => {
                 db.run(
-                    `UPDATE Post 
-                     SET like_amount = like_amount ${action === 'like' ? '+ 1' : '- 1'} 
-                     WHERE post_id = ? AND like_amount >= 0`,
+                    `INSERT INTO Likes (user_username, post_id) VALUES (?, ?)`,
+                    [user_username, post_id],
+                    function (err) {
+                        if (err) reject(err);
+                        else resolve();
+                    }
+                );
+            });
+
+            // Increment the like_amount in the Post table
+            await new Promise((resolve, reject) => {
+                db.run(
+                    `UPDATE Post SET like_amount = like_amount + 1 WHERE post_id = ?`,
+                    [post_id],
+                    function (err) {
+                        if (err) reject(err);
+                        else resolve();
+                    }
+                );
+            });
+            return NextResponse.json({ message: "Post liked successfully!" });
+        } else if (action === "unlike") {
+            // Remove the like from the Likes table
+            await new Promise((resolve, reject) => {
+                db.run(
+                    `DELETE FROM Likes WHERE user_username = ? AND post_id = ?`,
+                    [user_username, post_id],
+                    function (err) {
+                        if (err) reject(err);
+                        else resolve();
+                    }
+                );
+            });
+
+            // Decrement the like_amount in the Post table
+            await new Promise((resolve, reject) => {
+                db.run(
+                    `UPDATE Post SET like_amount = like_amount - 1 WHERE post_id = ?`,
                     [post_id],
                     function (err) {
                         if (err) reject(err);
@@ -66,17 +102,12 @@ export async function POST(req) {
                 );
             });
 
-            return NextResponse.json({ message: `Post ${action}d successfully!` });
+            return NextResponse.json({ message: "Post unliked successfully!" });
         } else if (action === 'save' || action === 'unsave') {
-            //console.log(`Updating post_savedindatabase for post_id: ${post_id}`);
-            // Handle save/unsave
-            //const newValue = action === 'save' ? 1 : 0;
             const currentValue = currentPost?.post_savedindatabase ?? 0; // Default to 0 if null
             console.log(`Current post_savedindatabase value for post_id ${post_id}:`, currentValue);
 
             const newValue = currentValue === 1 ? 0 : 1; // Toggle value
-
-            console.log(`Updating post_savedindatabase to ${newValue} for post_id: ${post_id}`);
 
             console.log(`Updating post_savedindatabase to ${newValue} for post_id: ${post_id}`);
             await new Promise((resolve, reject) => {
@@ -123,28 +154,3 @@ export async function POST(req) {
     }
     
 }
-
-// // Handle POST request to toggle like
-// export async function POST(req) {
-//     try {
-//         const { post_id, action } = await req.json();  // Get post_id & action (like/unlike)
-//         const db = await openDb();
-
-//         // Increase or decrease like count based on action
-//         await new Promise((resolve, reject) => {
-//             db.run(
-//                 `UPDATE Post SET like_amount = like_amount ${action === 'like' ? '+ 1' : '- 1'} WHERE post_id = ? AND like_amount > 0`,
-//                 [post_id],
-//                 function (err) {
-//                     if (err) reject(err);
-//                     else resolve();
-//                 }
-//             );
-//         });
-
-//         return NextResponse.json({ message: `Post ${action}d successfully!` });
-//     } catch (error) {
-//         console.error("Database error:", error);
-//         return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });
-//     }
-// }

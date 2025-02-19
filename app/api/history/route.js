@@ -11,15 +11,27 @@ async function openDb() {
 }
 
 // Handle GET request to `/api/history`
-export async function GET() {
+export async function GET(request) {
     try {
         const db = await openDb();
+
+        // Extract the username from the query parameters
+        const { searchParams } = new URL(request.url);
+        const user_username = searchParams.get('user_username');
+
+        if (!user_username) {
+            return NextResponse.json({ error: "user_username is required" }, { status: 400 });
+        }
+
+        // Fetch posts liked by the user
         const posts = await new Promise((resolve, reject) => {
             db.all(
-                `SELECT post_id, post_content, user_username, share_amount, view_amount, like_amount 
-                 FROM Post 
-                 WHERE like_amount > 0 
-                 ORDER BY like_amount DESC`,
+                `SELECT p.post_id, p.post_content, p.user_username, p.share_amount, p.view_amount, p.like_amount, p.post_savedindatabase, l.liked_at 
+                 FROM Post p
+                 JOIN Likes l ON p.post_id = l.post_id
+                 WHERE l.user_username = ?
+                 ORDER BY l.liked_at DESC`,
+                [user_username],
                 (err, rows) => {
                     if (err) reject(err);
                     else resolve(rows);

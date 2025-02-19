@@ -7,25 +7,27 @@ export default function PostingArea() {
   const [newPostText, setNewPostText] = useState('');
   const [loading, setLoading] = useState(true);
 
+
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch("/api/postingarea");
+      console.log("Fetching posts..."); 
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts: ${response.statusText}");
+      }
+      const data = await response.json();
+      console.log("Fetched data:", data);
+      setPosts(data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   // Fetch posts from the database
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch("/api/postingarea");
-        console.log("Fetching posts..."); 
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts: ${response.statusText}");
-        }
-        const data = await response.json();
-        console.log("Fetched data:", data);
-        setPosts(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
   }, []);
 
@@ -50,9 +52,9 @@ export default function PostingArea() {
         }
 
         const savedPost = await response.json();
-        setPosts([savedPost, ...posts]); // Add the new post at the top
-        //setNewPostTitle('');
+        //setPosts([savedPost, ...posts]); // Add the new post at the top
         setNewPostText('');
+        fetchPosts();
       } catch (error) {
         console.error("Error adding post:", error);
       }

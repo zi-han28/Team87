@@ -63,8 +63,8 @@ export default function Navbar() {
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:space-x-8 md:flex-row">
             <li><Link href="/"  className="block py-2 px-3 text-white bg-blue-700 rounded-md md:bg-transparent md:text-blue-700">Home</Link></li>
             <li><Link href="/profile" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Profile</Link></li>
-            <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Post</a></li>
-            <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Pricing</a></li>
+            <li><Link href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Post</Link></li>
+            <li><Link href="/bookmark" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Bookmark</Link></li>
             <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Contact</a></li>
           </ul>
         </div>

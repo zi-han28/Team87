@@ -37,7 +37,7 @@ export default function Navbar() {
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
               </div>
               <ul className="py-2">
-                <li><a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Dashboard</a></li>
+                <li><a href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Profile</a></li>
                 <li><a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Settings</a></li>
                 <li><a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Earnings</a></li>
                 <li><Link href="/login"  className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Log in</Link></li>
@@ -63,7 +63,7 @@ export default function Navbar() {
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:space-x-8 md:flex-row">
             <li><Link href="/"  className="block py-2 px-3 text-white bg-blue-700 rounded-md md:bg-transparent md:text-blue-700">Home</Link></li>
             <li><Link href="/profile" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Profile</Link></li>
-            <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Services</a></li>
+            <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Post</a></li>
             <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Pricing</a></li>
             <li><a href="#" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Contact</a></li>
           </ul>

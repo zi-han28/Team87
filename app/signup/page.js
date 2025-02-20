@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link'; // Next.js Link component
+import React, { useState } from "react";
+import Link from "next/link"; // Next.js Link component
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // Track error messages
   const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -15,7 +16,7 @@ export default function SignUp() {
     const userData = { email, username, password };
 
     try {
-        const response = await fetch("/api/signup", {
+      const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,17 +25,22 @@ export default function SignUp() {
       });
 
       const data = await response.json();
+
       if (response.ok) {
         alert(data.message); // "User created successfully"
         setEmail("");
         setUsername("");
         setPassword("");
+        setError(null);
         setShowAlert(false);
-      } else {
-          setShowAlert(true);// "User already exists" or "Database error"
+      } else if(data.message == "User already exists"){
+          setShowAlert(true);
+      } 
+      else {
+        setError(data.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      alert("An error occurred. Please try again.");
+      setError("An error occurred. Please try again.");
     }
   };
 
@@ -150,4 +156,3 @@ export default function SignUp() {
     </div>
   );
 };
-// export default SignUp;

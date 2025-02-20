@@ -1,11 +1,10 @@
 -- Create users table
 CREATE TABLE IF NOT EXISTS User (
-    user_username TEXT PRIMARY KEY,
-    user_firstname TEXT NOT NULL,
-    user_lastname TEXT NOT NULL,
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_username TEXT NOT NULL UNIQUE,
     user_email TEXT NOT NULL UNIQUE,
     user_password TEXT NOT NULL,
-    user_badges TEXT
+    user_introduction TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Chatroom (

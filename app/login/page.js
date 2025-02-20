@@ -1,3 +1,4 @@
+// frontend for log in page
 'use client'; // Mark this as a Client Component
 
 import { useState } from 'react';
@@ -6,14 +7,15 @@ import Link from 'next/link';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit =async(e) => {
     e.preventDefault();
-
+  
     const userData = { email, password };
-
+  
     try {
-      const response = await fetch('http://localhost:5030/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,21 +23,30 @@ export default function Login() {
         body: JSON.stringify(userData),
       });
 
+      console.log('Login response:', response); // Log the response
+  
       const data = await response.json();
       if (response.ok) {
         alert(data.message); // "Login successful"
         setEmail('');
         setPassword('');
+        setError(null);
       } else {
-        alert(data.message); // "Invalid email or password"
+        alert(data.message|| "Invalid email or password."); // "Invalid email or password"
       }
     } catch (err) {
+      console.error('Login error:', err); // Log the error
       alert('An error occurred. Please try again.');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
+      {/* Error Alert */}
+        {error && (
+        <div className="p-4 mb-4 text-red-800 rounded-lg bg-red-50">
+          {error}
+        </div>)}
       <div className="bg-[#613DC1] text-white py-10 px-12 rounded-2xl shadow-xl w-[500px] md:w-[600px]">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">

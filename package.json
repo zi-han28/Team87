@@ -10,13 +10,15 @@
     "build-db": "db_schema.sql | sqlite3 database.db ",
     "clean-db": "rm database.db #remove the old database",
     "build-db-win": "sqlite3 database.db < db_schema.sql",
-    "clean-db-win": "del database.db"
+    "clean-db-win": "rm -f database.db"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.0",
-    "next": "15.1.7",
+    "bcryptjs": "^3.0.2",
+    "next": "^15.1.7",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

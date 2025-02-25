@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import sqlite3 from 'sqlite3';
+import path from 'path';
 
-// Function to open the SQLite database
 async function openDb() {
-    return new sqlite3.Database(process.cwd() + './database.db', (err) => {
+    const dbPath = path.join(process.cwd(), 'database.db'); // Use path.join to construct the path
+    return new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error("Database connection error:", err);
         }
@@ -23,9 +24,27 @@ export async function GET(req) {
                 else resolve(rows);
             });
         });
+
+        const postsWithComments = await Promise.all(
+            posts.map(async (post) => {
+                const comments = await new Promise((resolve, reject) => {
+                    db.all(
+                        `SELECT * FROM comments 
+                         WHERE post_id = ? 
+                         ORDER BY created_at DESC`,
+                        [post.post_id],
+                        (err, rows) => {
+                            if (err) reject(err);
+                            else resolve(rows);
+                        }
+                    );
+                });
+                return { ...post, comments }; // Add comments to the post object
+            })
+        );
         
 
-        return NextResponse.json(posts);
+        return NextResponse.json(postsWithComments);
     } catch (error) {
         console.error("Database error:", error);
         return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });
@@ -34,7 +53,7 @@ export async function GET(req) {
 
 // Handle POST request to toggle like or save
 export async function POST(req) {
-    const { post_id, action, user_username } = await req.json();  // Get post_id & action (like/unlike or save/unsave)
+    const { post_id, action, user_username, comment_text } = await req.json();  // Get post_id & action (like/unlike or save/unsave)
     try {
         
         const db = await openDb();
@@ -142,7 +161,54 @@ export async function POST(req) {
             console.log(`Updated post_savedindatabase value for post_id ${post_id}:`, updatedPost?.post_savedindatabase);
 
             return NextResponse.json({ message: `Post ${action}d successfully!` });
-        } else {
+        
+        } else if (action === 'addComment') {
+            // Add a new comment
+            if (!comment_text) {
+                return NextResponse.json({ error: "comment_text is required" }, { status: 400 });
+            }
+
+            // Insert the new comment and return the created comment object
+    const newComment = await new Promise((resolve, reject) => {
+        db.run(
+            `INSERT INTO comments (post_id, user_username, comment_text) VALUES (?, ?, ?)`,
+            [post_id, user_username, comment_text],
+            function (err) {
+                if (err) reject(err);
+                else {
+                    // Fetch the newly created comment using `this.lastID`
+                    db.get(
+                        `SELECT * FROM comments WHERE comment_id = ?`,
+                        [this.lastID],
+                        (err, row) => {
+                            if (err) reject(err);
+                            else resolve(row);
+                        }
+                    );
+                }
+            }
+        );
+    });
+
+    return NextResponse.json(newComment); // Return the newly created comment
+        } else if (action === 'fetchComments') {
+            // Fetch all comments for a specific post
+            const comments = await new Promise((resolve, reject) => {
+                db.all(
+                    `SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC`,
+                    [post_id],
+                    function (err, rows) {
+                        if (err) reject(err);
+                        else resolve(rows);
+                    }
+                );
+            });
+
+            return NextResponse.json(comments);
+
+        }
+        
+        else {
             return NextResponse.json({ error: "Invalid action" }, { status: 400 });
         }
 

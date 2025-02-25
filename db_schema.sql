@@ -46,6 +46,16 @@ CREATE TABLE IF NOT EXISTS Likes (
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE
 );
 
+-- Table to store comments
+CREATE TABLE comments (
+    comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INT NOT NULL,
+    user_username VARCHAR(255) NOT NULL,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(post_id)
+);
+
 
 INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
 ('testuser', 'Test', 'User', 'test@example.com', 'password', NULL);
@@ -71,8 +81,22 @@ INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_a
 ('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0);
 
 INSERT INTO Likes (user_username, post_id) VALUES
-('testuser', 1),
 ('alex_wong', 1),
 ('john_doe', 2),
-('jane_smith', 3),
-('testuser', 3);
+('jane_smith', 3);
+
+INSERT INTO comments (post_id, user_username, comment_text, created_at)
+VALUES 
+(1, 'john_doe', 'This is a great post!', '2023-10-01 10:00:00'),
+(1, 'jane_smith', 'I totally agree with this.', '2023-10-01 10:15:00'),
+(1, 'alex_wong', 'Can you explain this further?', '2023-10-01 10:30:00'),
+
+(2, 'john_doe', 'Nice work!', '2023-10-02 11:00:00'),
+(2, 'alex_wong', 'This is very helpful.', '2023-10-02 11:30:00'),
+
+(3, 'jane_smith', 'Thanks for sharing!', '2023-10-03 12:15:00'),
+(3, 'alex_wong', 'This is an amazing read!', '2023-10-03 12:30:00'),
+(3, 'john_doe', 'I highly recommend this to everyone.', '2023-10-03 12:45:00'),
+(3, 'jane_smith', 'This post changed my perspective.', '2023-10-03 13:00:00'),
+(3, 'alex_wong', 'Can you share more resources on this topic?', '2023-10-03 13:15:00'),
+(3, 'john_doe', 'Looking forward to your next post!', '2023-10-03 13:30:00');

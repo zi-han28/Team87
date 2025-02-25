@@ -6,29 +6,39 @@ export default function HistoryPage() {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [Posts, setPosts] = useState([]);
+  const current_user = "test_user"; // Replace with the logged-in user's username
 
+  const [comments, setComments] = useState({}); // { post_id: [comments] }
+  const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
+
+  const [commentTexts, setCommentTexts] = useState({});
+  const fetchLikedPosts = async () => {
+    try {
+      const user_username = current_user; // Replace with the logged-in user's username
+      const response = await fetch(`/api/history?user_username=${user_username}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch liked posts");
+      }
+      const data = await response.json();
+      setPosts(data);
+      // Initialize visible comments count (3 comments per post by default)
+    const initialVisibleComments = {};
+    data.forEach(post => {
+      initialVisibleComments[post.post_id] = 3; // Show 3 comments by default
+    });
+    setVisibleCommentsCount(initialVisibleComments);
+      const likedPostIds = new Set(data.map(post => post.post_id));
+      setLikedPosts(likedPostIds);
+    } catch (error) {
+      console.error("Error fetching liked posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   // Fetch liked posts from the database for the current user
   useEffect(() => {
-    const fetchLikedPosts = async () => {
-      try {
-        const user_username = "test_user"; // Replace with the logged-in user's username
-        const response = await fetch(`/api/history?user_username=${user_username}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch liked posts");
-        }
-        const data = await response.json();
-        setPosts(data);
-        const likedPostIds = new Set(data.map(post => post.post_id));
-        setLikedPosts(likedPostIds);
-      } catch (error) {
-        console.error("Error fetching liked posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchLikedPosts();
   }, []);
 
@@ -41,7 +51,7 @@ export default function HistoryPage() {
       await fetch("/api/home", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id, action, user_username: "test_user" }), // Ensure `user_username` is passed
+        body: JSON.stringify({ post_id, action, user_username: current_user }), // Ensure `user_username` is passed
       });
   
       // Correctly update state
@@ -67,7 +77,7 @@ export default function HistoryPage() {
   
   // Handle Save Button Toggle (Save & Unsave)
   const handleSaveToggle = async (post_id) => {
-    const updatedPosts = posts.map((post) => {
+    const updatedPosts = Posts.map((post) => {
       if (post.post_id === post_id) {
         return { ...post, post_savedindatabase: post.post_savedindatabase === 1 ? 0 : 1 };
       }
@@ -93,7 +103,7 @@ export default function HistoryPage() {
   // Handle Share Button Click
   const handleShare = (post_id) => {
     // Increment share count in the UI
-    setPosts(posts.map(post =>
+    setPosts(Posts.map(post =>
       post.post_id === post_id
         ? { ...post, share_amount: post.share_amount + 1 }
         : post
@@ -114,6 +124,62 @@ export default function HistoryPage() {
         : post
     ));
   };
+  
+  // Function to fetch additional comments
+const fetchMoreComments = async (post_id) => {
+  setVisibleCommentsCount(prev => ({
+    ...prev,
+    [post_id]: Posts.find(post => post.post_id === post_id).comments.length, // Show all comments
+  }));
+};
+
+// Handle comment text input change
+const handleCommentTextChange = (post_id, text) => {
+  setCommentTexts(prev => ({
+    ...prev,
+    [post_id]: text,
+  }));
+};
+
+
+// Add a comment to a post
+const addComment = async (post_id, comment_text) => {
+  if (!comment_text?.trim()) return;
+  try {
+    const response = await fetch('/api/home', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        post_id, 
+        user_username: current_user, 
+        comment_text, 
+        action: 'addComment' }),
+    });
+    if (!response.ok) throw new Error('Failed to add comment');
+    const newComment = await response.json();
+    if (!newComment.comment_id) {
+      throw new Error("New comment is missing a `comment_id`");
+    }
+    
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.post_id === post_id
+          ? { ...post, 
+            comments: [newComment, ...(post.comments || [])] 
+          }
+          : post
+      )
+    );
+    setCommentTexts(prev => ({
+      ...prev,
+      [post_id]: '',
+    }));
+    fetchLikedPosts();
+  } catch (error) {
+    console.error('Error adding comment:', error);
+  }
+};
+
 
   return (
     <div className="flex flex-col items-center min-h-screen text-white p-6">
@@ -146,7 +212,42 @@ export default function HistoryPage() {
                   >
                     {post.post_savedindatabase === 1 ? '📌 Unsave' : '📌 Save'}
                   </button>
+
+                  <div className="mt-1">
+                <textarea
+                  className="w-full p-2 border rounded-lg text-black"
+                  placeholder="Enter your comment..."
+                  value={commentTexts[post.post_id] || ''}
+                  onChange={(e) => handleCommentTextChange(post.post_id, e.target.value)}
+                  rows={1}
+                />
+                
+              </div>
+              <button
+                  className="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-600 mt-2"
+                  onClick={() => addComment(post.post_id, commentTexts[post.post_id])}
+                >
+                  💬 Add Comment
+                </button>
                 </div>
+                {/* Display initial comments */}
+                <div className="mt-4 space-y-2">
+                  {post.comments?.slice(0, visibleCommentsCount[post.post_id]).map(comment => (
+                    <div key={comment.comment_id} className="p-2 bg-gray-800 rounded-lg">
+                      <strong>{comment.user_username}: </strong>{comment.comment_text}
+                    </div>
+                  ))}
+                </div>
+
+                {/* "View more Comments" button */}
+                {post.comments?.length > 3 && visibleCommentsCount[post.post_id] < post.comments.length && (
+                  <button
+                    className="mt-2 text-blue-500 hover:text-blue-600"
+                    onClick={() => fetchMoreComments(post.post_id)}
+                  >
+                    View more Comments
+                  </button>
+                )}
                 <div className="mt-2 text-sm text-gray-400">
                   <span>👁️ Views: {post.view_amount}</span>
                 </div>

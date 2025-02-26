@@ -3,17 +3,32 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
-  const [messages, setMessages] = useState([
-    { user: 'User1', text: 'Hello!' },
-    { user: 'User2', text: 'Hi there!' }
-  ]);
-  const [newMessage, setNewMessage] = useState('');
-  const messagesEndRef = useRef(null);
+  const [query, setQuery] = useState("");
+  const [response, setResponse] = useState("");
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
   const [savedPosts, setSavedPosts] = useState(new Set()); // Track saved posts
+
+  const handleSearch = async () => {
+    try {
+      const res = await fetch("/api/rag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch response");
+      const data = await res.json();
+      setResponse(data.answer);
+    } catch (error) {
+      console.error("Error fetching RAG response:", error);
+      setResponse("Error fetching response.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch all posts and liked posts for the current user
   useEffect(() => {
@@ -151,29 +166,25 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center min-h-screen text-white p-6">
+      
       <div className="w-4/5 bg-gray-900 p-6 shadow-lg rounded-lg flex flex-col h-96">
-        <h2 className="text-2xl font-bold mb-4">Chat Room</h2>
-        <div className="flex-1 p-4 overflow-y-auto space-y-2 bg-gray-800 rounded-lg">
-          {messages.map((msg, index) => (
-            <div key={index} className={`p-2 rounded-lg max-w-xs ${msg.user === 'You' ? 'bg-green-400 self-end ml-auto' : 'bg-blue-400'}`}> 
-              <strong>{msg.user}: </strong>{msg.text}
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center space-x-2 mt-2">
-          <input
-            type="text"
-            className="flex-grow p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-            onClick={() => setMessages([...messages, { user: "You", text: newMessage }])}
-          >
-            Send
-          </button>
+        <h2 className="text-2xl font-bold mb-4">Ask Anything</h2>
+        <input
+          type="text"
+          className="p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder="Ask a question..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mt-2"
+          onClick={handleSearch}
+          disabled={loading}
+        >
+          {loading ? "Searching..." : "Search"}
+        </button>
+        <div className="p-4 mt-4 bg-gray-800 rounded-lg">
+          {response && <p>{response}</p>}
         </div>
       </div>
 

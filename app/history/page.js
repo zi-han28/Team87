@@ -52,7 +52,7 @@ export default function HistoryPage() {
       await fetch("/api/home", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id, action, user_username: "test_user" }), // Ensure `user_username` is passed
+        body: JSON.stringify({ post_id, action, user_username: user.user_username }), // Ensure `user_username` is passed
       });
   
       // Correctly update state

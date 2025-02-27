@@ -19,7 +19,7 @@ INSERT INTO chatrooms (name, intro) VALUES ('Computer Science','Welcome to the C
 INSERT INTO chatrooms (name, intro) VALUES ('Business', 'Welcome to the Business Chat Group for university students, a space designed to connect aspiring professionals, budding entrepreneurs, and curious minds. This group is the perfect place to explore business concepts, share insights, and collaborate with peers on academic and real-world topics.');
 INSERT INTO chatrooms (name, intro) VALUES ('Law', 'The law affects every aspect of our lives; it governs our conduct from the cradle to the grave and its influence even extends from before our birth to after our death.');
 
--- messages table
+-- Create messages table
 CREATE TABLE IF NOT EXISTS messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   chatroom_id INTEGER NOT NULL,
@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS messages (
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (chatroom_id) REFERENCES chatrooms(id)
 );
+
 
 CREATE TABLE IF NOT EXISTS Post (
     post_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,23 +60,8 @@ CREATE TABLE comments (
     FOREIGN KEY (post_id) REFERENCES posts(post_id)
 );
 
-INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
-('testuser', 'Test', 'User', 'test@example.com', 'password', NULL);
 
-INSERT INTO User (user_username, user_firstname, user_lastname, user_email, user_password, user_badges) VALUES
-('john_doe', 'John', 'Doe', 'john.doe@example.com', 'hashedpassword1', 'Gold, Contributor'),
-('jane_smith', 'Jane', 'Smith', 'jane.smith@example.com', 'hashedpassword2', 'Silver, Expert'),
-('alex_wong', 'Alex', 'Wong', 'alex.wong@example.com', 'hashedpassword3', 'Bronze, Helper');
 
-INSERT INTO Chatroom (chatroom_name, chatroom_description, chatroom_type, user_username) VALUES
-('Tech Talk', 'A place to discuss technology trends.', 'public', 'john_doe'),
-('Gaming Hub', 'Discuss the latest in gaming.', 'private', 'jane_smith'),
-('Book Club', 'Share and discuss your favorite books.', 'public', 'alex_wong');
-
-INSERT INTO Messages (user_username, chatroom_name, msg_content) VALUES
-('john_doe', 'Tech Talk', 'Hey everyone! What do you think about AI?'),
-('jane_smith', 'Gaming Hub', 'Who is excited for the new RPG game?'),
-('alex_wong', 'Book Club', 'Has anyone read the latest sci-fi novel?');
 
 INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES
 ('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0),
@@ -104,3 +90,4 @@ VALUES
 (3, 'jane_smith', 'This post changed my perspective.', '2023-10-03 13:00:00'),
 (3, 'alex_wong', 'Can you share more resources on this topic?', '2023-10-03 13:15:00'),
 (3, 'john_doe', 'Looking forward to your next post!', '2023-10-03 13:30:00');
+

@@ -245,7 +245,7 @@ return (
       <div className="flex items-center space-x-2 mt-2">
         <input
           type="text"
-          className="flex-grow p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-grow p-2 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="Type your message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

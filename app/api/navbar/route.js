@@ -53,14 +53,14 @@ export async function GET(req) {
     );
   }
 }
-// Handle POST requests to /api/signout
+// Handle POST requests for signing out
 export async function POST() {
     try {
       // Create a response object
-      const response = NextResponse.json(
+      const response =NextResponse.json(
         { status: 200 }
       );
-  
+
       // Clear the user_id cookie
       response.cookies.set("user_id", "", {
         httpOnly: true,

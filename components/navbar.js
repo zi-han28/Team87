@@ -88,7 +88,7 @@ export default function Navbar() {
               
 
             ) : (// Display "Log in/Sign up" if not logged in
-              <Link href="/login" className="text-white px-4 py-2">Log in/Sign up</Link>
+              <Link href="/login" className="text-white px-4 py-2">Login/Sign up</Link>
             )}
           </button>
 

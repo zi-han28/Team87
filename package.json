@@ -10,12 +10,18 @@
     "build-db": "db_schema.sql | sqlite3 database.db ",
     "clean-db": "rm database.db #remove the old database",
     "build-db-win": "sqlite3 database.db < db_schema.sql",
-    "clean-db-win": "del database.db"
+    "clean-db-win": "rm -f database.db"
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "bcryptjs": "^3.0.2",
+<<<<<<< HEAD
     "next": "^15.1.7",
+=======
+    "js-cookie": "^3.0.5",
+    "next": "^15.1.7",
+    "next-auth": "^4.24.11",
+>>>>>>> abdacf33af1adfa38101be59f7f64712fef2b9b9
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sqlite": "^5.1.1",

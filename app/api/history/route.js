@@ -5,11 +5,6 @@ import path from "path";
 // Function to open the SQLite database
 async function openDb() {
     const dbPath = path.join(process.cwd(), 'database.db');
-    // return new sqlite3.Database(process.cwd() + './database.db', (err) => {
-    //     if (err) {
-    //         console.error("Database connection error:", err);
-    //     }
-    // });
     return new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error("Database connection error:", err);

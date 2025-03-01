@@ -17,8 +17,8 @@ export default function Home() {
   const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
   const [commentTexts, setCommentTexts] = useState({});
 
-  //const [user, setUser] = 
-  const current_user = user.user_username; // Replace with the logged-in user's username
+  // Replace with the logged-in user's username
+  const current_user = user.user_username; 
 
   const handleSearch = async () => {
     try {
@@ -115,7 +115,7 @@ export default function Home() {
       await fetch("/api/home", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ post_id, action, user_username: user.user_username }), // Ensure `user_username` is passed
+        body: JSON.stringify({ post_id, action, user_username: user.user_username }),
       });
   
       // Correctly update state
@@ -254,7 +254,7 @@ return (
       <h2 className="text-2xl font-bold mb-4">Ask Anything</h2>
       <input
         type="text"
-        className="p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="p-2 border bg-gray-800 text-white rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-400"
         placeholder="Ask a question..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -306,7 +306,7 @@ return (
 
                 <div className="mt-1">
               <textarea
-                className="w-full p-2 border rounded-lg text-white"
+                className="w-full p-2 border rounded-lg bg-gray-800 text-white"
                 placeholder="Enter your comment..."
                 value={commentTexts[post.post_id] || ''}
                 onChange={(e) => handleCommentTextChange(post.post_id, e.target.value)}
@@ -350,24 +350,6 @@ return (
           <p>No posts available.</p>
         )}
       </div>
-
-    <div className="w-4/5 mt-8">
-      <Link href="/bookmark" className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">
-        View Bookmarked Posts
-      </Link>
-    </div>
-
-    <div className="w-4/5 mt-8">
-      <Link href="/history" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-        View Liked Posts History
-      </Link>
-    </div>
-
-<div className="w-4/5 mt-8">
-<Link href="/postingarea" className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
-  Go to Posting Area
-</Link>
-</div>
     </div>
   </div>
 );

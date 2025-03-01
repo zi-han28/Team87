@@ -15,8 +15,6 @@ function openDb() {
         });
     });
 }
-
-
 // Handle GET request to `/api/home`
 export async function GET(req) {
     try {
@@ -30,7 +28,6 @@ export async function GET(req) {
                 else resolve(rows);
             });
         });
-
         const postsWithComments = await Promise.all(
             posts.map(async (post) => {
                 const comments = await new Promise((resolve, reject) => {
@@ -48,8 +45,6 @@ export async function GET(req) {
                 return { ...post, comments }; // Add comments to the post object
             })
         );
-        
-
         return NextResponse.json(postsWithComments);
     } catch (error) {
         console.error("Database error:", error);
@@ -211,14 +206,10 @@ export async function POST(req) {
             });
 
             return NextResponse.json(comments);
-
         }
-        
         else {
             return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-        }
-
-        
+        }     
 
     } catch (error) {
         console.error("Database error:", error);

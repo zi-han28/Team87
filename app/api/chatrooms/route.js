@@ -13,8 +13,9 @@ async function openDb() {
 }
 
 export async function GET() {
+  // open database
   const db = await openDb();
-
+  // fetch chatroom menu details
   return new Promise((resolve, reject) => {
     db.all('SELECT * FROM chatrooms')
       .then((rows) => {

@@ -15,34 +15,31 @@ async function openDb() {
 // Handle POST requests to /api/login
 export async function POST(req) {
   try {
+    // fetch the appropriate email and password data
     const { email, password } = await req.json();
+    // open database
     const db = await openDb();
-
     // Find user by email
     const user = await db.get("SELECT * FROM User WHERE user_email = ?", [email]);
-
+    // If user does not exist
     if (!user) {
       return NextResponse.json(
         { message: "Invalid email or password." },
         { status: 400 }
       );
     }
-
     // Compare hashed password
     const isMatch = await bcrypt.compare(password, user.user_password);
-
+    // if passwords do not match
     if (!isMatch) {
-      return NextResponse.json(
-        { message:"Invalid email or password."},
-        {status: 400 }
-      );
+      return NextResponse.json({status: 400 });
     }
 
-    // Set an HTTP-only cookie with the user ID
+    // set an HTTP-only cookie with the user ID
     const response = NextResponse.json(
       { message:"Login successful",
         user: {
-        user_id: user.user_id, // Return user_id
+        user_id: user.user_id,
         user_username: user.user_username,
         user_email: user.user_email,
       },},
@@ -51,14 +48,11 @@ export async function POST(req) {
     response.cookies.set("user_id", user.user_id, {
       httpOnly: true, // Prevent access from JavaScript
       path: "/", // Available across all routes
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 7, // 1 week time limit
     });
     return response;
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json(
-      { message: "An error occurred. Please try again." },
-      { status: 500 }
-    );
+    return NextResponse.json({ status: 500});
   }
 }

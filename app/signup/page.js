@@ -48,7 +48,7 @@ export default function SignUp() {
 
   return (
     <div className=" min-h-screen flex items-center justify-center">
-      {/* Alert for "Account already exists" */}
+      {/* Show alert for "Account already exists" */}
       {showAlert && (
         <div
           className="absolute top-[200px] flex items-center p-4 mb-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
@@ -96,9 +96,10 @@ export default function SignUp() {
       <span className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight">Sign Up</h2>
         </span>
-
+      {/* sign up form */}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form  className="space-y-6" onSubmit={handleSubmit} >
+          {/* email section */}
           <div>
             <label htmlFor="email" className="block text-sm/6 font-medium"> Email</label>
             <div className="mt-2">
@@ -111,8 +112,7 @@ export default function SignUp() {
                 required/>
             </div>
           </div>
-
-
+          {/* username section */}
           <div>
           <div className="flex items-center justify-between">
             <label className="block text-sm/6 font-medium" htmlFor="username">Username</label>
@@ -127,7 +127,7 @@ export default function SignUp() {
               required/>
           </div>
           </div>
-
+          {/* password section */}
           <div>
           <div className="flex items-center justify-between">
             <label
@@ -145,7 +145,7 @@ export default function SignUp() {
             />
           </div>
           </div>
-          
+          {/* submit button */}
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

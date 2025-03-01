@@ -5,18 +5,12 @@ import path from "path";
 // Function to open the SQLite database
 async function openDb() {
     const dbPath = path.join(process.cwd(), 'database.db');
-    // return new sqlite3.Database(process.cwd() + './database.db', (err) => {
-    //     if (err) {
-    //         console.error("Database connection error:", err);
-    //     }
-    // });
     return new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error("Database connection error:", err);
         }
     });
 }
-
 // Handle GET request to `/api/home`
 export async function GET() {
     try {
@@ -31,7 +25,6 @@ export async function GET() {
                 else resolve(rows);
             });
         });
-
         return NextResponse.json(posts);
     } catch (error) {
         console.error("Database error:", error);

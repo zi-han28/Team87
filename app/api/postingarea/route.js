@@ -5,19 +5,12 @@ import path from "path";
 // Function to open the SQLite database
 async function openDb() {
     const dbPath = path.join(process.cwd(), 'database.db');
-    // return new sqlite3.Database(process.cwd() + './database.db', (err) => {
-    //     if (err) {
-    //         console.error("Database connection error:", err);
-    //     }
-    // });
     return new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error("Database connection error:", err);
         }
     });
 }
-
-
 // Handle GET request to `/api/home`
 export async function GET(req) {
     try {
@@ -30,7 +23,6 @@ export async function GET(req) {
                 else resolve(rows);
             });
         });
-
         const postsWithComments = await Promise.all(
           posts.map(async (post) => {
               const comments = await new Promise((resolve, reject) => {
@@ -48,15 +40,12 @@ export async function GET(req) {
               return { ...post, comments }; // Add comments to the post object
           })
       );
-      
-
       return NextResponse.json(postsWithComments);
     } catch (error) {
         console.error("Database error:", error);
         return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });
     }
 }
-
 // **POST: Add a new post**
 export async function POST(req) {
     try {
@@ -64,13 +53,11 @@ export async function POST(req) {
       if (!post_content || !user_username) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
       }
-  
       const db = await openDb();
       await db.run(
         "INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES (?, ?, 0, 0, 0, 0)",
         [post_content, user_username]
       );
-  
       return NextResponse.json({ success: true, message: "Post added successfully" });
     } catch (error) {
       console.error("Error adding post:", error);

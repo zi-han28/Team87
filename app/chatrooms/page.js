@@ -1,11 +1,11 @@
+// frontend for chatroom menu page
 'use client';
-
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function Chatrooms() {
   const [chatrooms, setChatrooms] = useState([]);
-
+// fetch chatrooms name and intro
   useEffect(() => {
     fetch('/api/chatrooms')
       .then((response) => response.json())
@@ -19,9 +19,10 @@ export default function Chatrooms() {
         {chatrooms.map((chatroom) => (
           <Link
             key={chatroom.id}
-            href={`/chatrooms/${chatroom.id}`} // Link to the dynamic route
+            href={`/chatrooms/${chatroom.id}`} // Link to [chatroomid] page
             className="block p-4 rounded-lg shadow-md border border-gray-300 hover:bg-gray-200 hover:text-[#613DC1] hover:shadow-lg transition duration-300 bg-[#613DC1]">
-            <h2 className="text-xl text-center font-semibold ">{chatroom.name}</h2>
+            {/* chatroom name and intro section */}
+            <h2 className="text-xl text-center font-semibold ">{chatroom.name}</h2> 
             <p className="text-center pt-[10px]">{chatroom.intro}</p>
           </Link>
         ))}

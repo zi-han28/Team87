@@ -187,6 +187,9 @@ export default function Bookmark() {
                 <div className="mt-2 text-sm text-gray-400">
                   <span>👁️ Views: {post.view_amount}</span>
                 </div>
+                <div className="mt-2 text-sm text-gray-400">
+                <span>🕒 Posted At: {new Date(post.timestamp).toLocaleString()}</span>
+              </div> 
             </div>
           ))
         ) : (

@@ -16,7 +16,7 @@ export async function GET(req) {
     try {
         const db = await openDb();
         const posts = await new Promise((resolve, reject) => {
-            db.all(`SELECT post_id, post_content, share_amount, view_amount, like_amount, user_username, post_savedindatabase 
+            db.all(`SELECT post_id, post_content, share_amount, view_amount, like_amount, user_username, post_savedindatabase, timestamp 
                 FROM Post ORDER BY post_id DESC LIMIT 5`, 
             (err, rows) => {
                 if (err) reject(err);
@@ -55,7 +55,7 @@ export async function POST(req) {
       }
       const db = await openDb();
       await db.run(
-        "INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES (?, ?, 0, 0, 0, 0)",
+        "INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase, timestamp) VALUES (?, ?, 0, 0, 0, 0, datetime('now'))",
         [post_content, user_username]
       );
       return NextResponse.json({ success: true, message: "Post added successfully" });

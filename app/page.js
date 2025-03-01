@@ -57,6 +57,9 @@ export default function Home() {
     }));
 
     setPosts(postsWithComments);
+    postsWithComments.forEach(post => {
+      handleView(post.post_id); // Increment view count in the frontend
+    });
 
     
       // Initialize visible comments count (3 comments per post by default)
@@ -181,12 +184,26 @@ export default function Home() {
   };
 
   // Handle View Count (Simulate incrementing views)
-  const handleView = (post_id) => {
-    setPosts(posts.map(post =>
-      post.post_id === post_id
-        ? { ...post, view_amount: post.view_amount + 1 }
-        : post
-    ));
+  const handleView = async (post_id) => {
+    try {
+      // Increment the view count in the backend
+      await fetch("/api/home", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post_id, action: "incrementView" }),
+      });
+  
+      // Increment the view count in the frontend
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.post_id === post_id
+            ? { ...post, view_amount: post.view_amount + 1 }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error incrementing view count:", error);
+    }
   };
 
   // Function to fetch additional comments
@@ -343,7 +360,10 @@ return (
               )}       
               <div className="mt-2 text-sm text-gray-400">
                 <span>👁️ Views: {post.view_amount}</span>
-              </div>     
+              </div>    
+              <div className="mt-2 text-sm text-gray-400">
+                <span>🕒 Posted At: {new Date(post.timestamp).toLocaleString()}</span>
+              </div> 
             </div>
           ))
         ) : (

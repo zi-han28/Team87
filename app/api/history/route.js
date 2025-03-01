@@ -28,7 +28,7 @@ export async function GET(request) {
         // Fetch posts liked by the user
         const posts = await new Promise((resolve, reject) => {
             db.all(
-                `SELECT p.post_id, p.post_content, p.user_username, p.share_amount, p.view_amount, p.like_amount, p.post_savedindatabase, l.liked_at 
+                `SELECT p.post_id, p.post_content, p.user_username, p.share_amount, p.view_amount, p.like_amount, p.post_savedindatabase, p.timestamp, l.liked_at 
                  FROM Post p
                  JOIN Likes l ON p.post_id = l.post_id
                  WHERE l.user_username = ?

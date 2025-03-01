@@ -64,7 +64,7 @@ CREATE TABLE comments (
 
 
 
-INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES
+INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase, timestamp) VALUES
 ('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0, '2023-10-01 10:00:00'),
 ('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 0,'2023-10-01 9:00:00'),
 ('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0, '2023-10-01 11:00:00');

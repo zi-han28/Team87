@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS Post (
     view_amount INTEGER NOT NULL DEFAULT 0,
     like_amount INTEGER NOT NULL DEFAULT 0,
     post_savedindatabase INTEGER NOT NULL DEFAULT 0,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_username) REFERENCES User(user_username) ON DELETE CASCADE
 );
 
@@ -64,9 +65,9 @@ CREATE TABLE comments (
 
 
 INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_amount, post_savedindatabase) VALUES
-('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0),
-('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 0),
-('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0);
+('The future of AI is looking bright with GPT advancements.', 'john_doe', 10, 150, 50, 0, '2023-10-01 10:00:00'),
+('The new RPG is releasing next month! Get ready!', 'jane_smith', 25, 300, 100, 0,'2023-10-01 9:00:00'),
+('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0, '2023-10-01 11:00:00');
 
 INSERT INTO Likes (user_username, post_id) VALUES
 ('testuser', 1),

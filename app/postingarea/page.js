@@ -4,7 +4,6 @@ import { useUser } from "../../components/UserContext";
 
 export default function PostingArea() {
   const [posts, setPosts] = useState([]);
-  //const [newPostTitle, setNewPostTitle] = useState('');
   const [newPostText, setNewPostText] = useState("");
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
@@ -66,7 +65,7 @@ export default function PostingArea() {
     if (newPostText.trim()) {
       const newPost = {
         post_content: newPostText, // API expects `post_content`, not `text`
-        user_username: user.user_username, // Replace with actual username from auth context
+        user_username: user.user_username, 
       };
 
       try {
@@ -81,7 +80,7 @@ export default function PostingArea() {
         }
 
         const savedPost = await response.json();
-        //setPosts([savedPost, ...posts]); // Add the new post at the top
+        // Add the new post at the top
         setNewPostText("");
         fetchPosts();
       } catch (error) {
@@ -176,7 +175,7 @@ export default function PostingArea() {
       .catch(() => alert("Failed to copy link."));
   };
 
-  // Handle View Count (Simulate incrementing views)
+  // Handle View Count
   const handleView = (post_id) => {
     setPosts(
       posts.map((post) =>
@@ -251,7 +250,7 @@ export default function PostingArea() {
         <div className="space-y-4">
           
           <textarea
-            className="w-full p-2 border rounded-lg text-white"
+            className="w-full p-2 border rounded-lg bg-gray-800 text-white"
             placeholder="Enter post text..."
             value={newPostText}
             onChange={(e) => setNewPostText(e.target.value)}
@@ -295,7 +294,7 @@ export default function PostingArea() {
                   </button>
                   <div className="mt-1">
                 <textarea
-                  className="w-full p-2 border rounded-lg text-white"
+                  className="w-full p-2 border rounded-lg bg-gray-800 text-white"
                   placeholder="Enter your comment..."
                   value={commentTexts[post.post_id] || ''}
                   onChange={(e) => handleCommentTextChange(post.post_id, e.target.value)}
@@ -333,6 +332,9 @@ export default function PostingArea() {
                 <div className="mt-2 text-sm text-gray-400">
                   <span>👁️ Views: {post.view_amount}</span>
                 </div>
+                <div className="mt-2 text-sm text-gray-400">
+                <span>🕒 Posted At: {new Date(post.timestamp).toLocaleString()}</span>
+              </div> 
               </div>
             ))
           ) : (

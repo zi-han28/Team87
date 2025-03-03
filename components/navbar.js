@@ -16,7 +16,7 @@ export default function Navbar() {
           method: 'GET',
           credentials: 'include', // Include cookies in the request
         });
-
+        // when user is logged in
         if (response.ok) {
           const data = await response.json();
           setUser({
@@ -24,14 +24,11 @@ export default function Navbar() {
             user_username: data.user_username,
             user_email: data.user_email,
         });
-        } else {
-          console.error('Failed to fetch profile image');
         }
       } catch (error) {
         console.error('Error fetching profile image:', error);
       }
     };
-
     fetchUserImage();
   }, [setUser]);
 
@@ -59,7 +56,6 @@ export default function Navbar() {
       }
     };
 
-
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -79,15 +75,12 @@ export default function Navbar() {
             className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             <span className="sr-only">Open user menu</span>
-            {/* <span className="text-white px-4 py-2">Log in/Sign up</span> */}
             {user.isLoggedIn ? (
               // Display profile image if logged in
               <div className="w-10 h-10 absolute top-[25px] right-[150px] rounded-full bg-[#613DC1] flex items-center justify-center text-white text-xl">
                 {user.user_username ? user.user_username[0].toUpperCase() : "?"}
               </div>
-              
-
-            ) : (// Display "Log in/Sign up" if not logged in
+              ) : (// Display default login/signup button
               <Link href="/login" className="text-white px-4 py-2">Login/Sign up</Link>
             )}
           </button>
@@ -121,8 +114,8 @@ export default function Navbar() {
 
         {/* Navbar Links */}
         <div className={`items-center ${isNavOpen ? "block" : "hidden"} w-full md:flex md:w-auto md:order-1`}>
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 md:space-x-8 md:flex-row">
-            <li><Link href="/"  className="block py-2 px-3 text-white bg-blue-700 rounded-md md:bg-transparent md:text-blue-700">Home</Link></li>
+          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 space-x-12 md:flex-row">
+            <li><Link href="/"  className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Home</Link></li>
             <li><Link href="/chatrooms" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">chatrooms</Link></li>
             <li><Link href="/postingarea" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Post</Link></li>
             <li><Link href="/bookmark" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Bookmark</Link></li>

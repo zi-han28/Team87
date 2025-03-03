@@ -10,12 +10,16 @@ async function openDb() {
     driver: sqlite3.Database,
   });
 }
+
+// Handle GET requests to messages api
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
+    // get the respective chatroomId
     const chatroomId = searchParams.get('chatroomId');
-  
+
+    // open database
     const db = await openDb();
-  
+  // fetch messages
     return new Promise((resolve, reject) => {
       db.all('SELECT * FROM messages WHERE chatroom_id = ? ORDER BY timestamp ASC', [chatroomId])
         .then((rows) => {
@@ -27,15 +31,13 @@ export async function GET(request) {
     });
   }
 
-
-
-
-
 // send message data function
 export async function POST(request) {
+    // fetch the appropriate data
     const { chatroomId, sender, message } = await request.json();
+    // open database
     const db = await openDb();
-  
+    // send messages
     return new Promise((resolve, reject) => {
       db.run(
         'INSERT INTO messages (chatroom_id, sender, message) VALUES (?, ?, ?)',

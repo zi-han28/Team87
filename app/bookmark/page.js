@@ -5,6 +5,7 @@ import { useUser } from "../../components/UserContext";
 export default function Bookmark() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Get the logged-in user from context
   const { user } = useUser();
   const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
@@ -23,7 +24,6 @@ export default function Bookmark() {
       });
   }, []);
 
-
     // Fetch all posts and liked posts for the current user
     useEffect(() => {
       const fetchData = async () => {
@@ -35,7 +35,6 @@ export default function Bookmark() {
           }
           const postsData = await postsResponse.json();
           setPosts(postsData);
-  
           // Fetch liked posts for the current user
           const user_username = user.user_username; // Replace with the logged-in user's username
           const likedResponse = await fetch(`/api/history?user_username=${user_username}`);
@@ -43,7 +42,7 @@ export default function Bookmark() {
             throw new Error("Failed to fetch liked posts");
           }
           const likedData = await likedResponse.json();
-  
+
           // Initialize likedPosts state with post IDs of liked posts
           const likedPostIds = likedData.map(post => post.post_id);
           setLikedPosts(new Set(likedPostIds));
@@ -53,7 +52,6 @@ export default function Bookmark() {
           setLoading(false);
         }
       };
-  
       fetchData();
     }, []);
   
@@ -68,7 +66,7 @@ export default function Bookmark() {
         await fetch("/api/home", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ post_id, action, user_username: user.user_username }), // Ensure `user_username` is passed
+          body: JSON.stringify({ post_id, action, user_username: user.user_username }), // Ensure user's user_username is passed
         });
     
         // Correctly update state
@@ -102,10 +100,8 @@ export default function Bookmark() {
       });
     
       setPosts(updatedPosts); // Update UI immediately
-    
       const action = updatedPosts.find(post => post.post_id === post_id).post_savedindatabase === 1 ? "save" : "unsave";
       console.log(`Toggling save: ${action} for post_id: ${post_id}`);
-    
 
       // Update bookmarkedPosts state directly
       setBookmarkedPosts(prevPosts =>
@@ -191,6 +187,9 @@ export default function Bookmark() {
                 <div className="mt-2 text-sm text-gray-400">
                   <span>👁️ Views: {post.view_amount}</span>
                 </div>
+                <div className="mt-2 text-sm text-gray-400">
+                <span>🕒 Posted At: {new Date(post.timestamp).toLocaleString()}</span>
+              </div> 
             </div>
           ))
         ) : (

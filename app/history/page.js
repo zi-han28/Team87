@@ -7,6 +7,7 @@ export default function HistoryPage() {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [Posts, setPosts] = useState([]);
+  // Get the logged-in user from context
   const { user } = useUser();
   const [comments, setComments] = useState({}); // { post_id: [comments] }
   const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
@@ -34,13 +35,10 @@ export default function HistoryPage() {
       setLoading(false);
     }
   };
-
-
   // Fetch liked posts from the database for the current user
   useEffect(() => {
     fetchLikedPosts();
   }, []);
-
 
   const handleLikeToggle = async (post_id) => {
     if (!user || !user.user_username) {
@@ -86,10 +84,8 @@ export default function HistoryPage() {
     });
   
     setPosts(updatedPosts); // Update UI immediately
-  
     const action = updatedPosts.find(post => post.post_id === post_id).post_savedindatabase === 1 ? "save" : "unsave";
     console.log(`Toggling save: ${action} for post_id: ${post_id}`);
-  
     try {
       await fetch("/api/home", {
         method: "POST",
@@ -100,7 +96,7 @@ export default function HistoryPage() {
       console.error("Error updating save:", error);
     }
   };
-  
+
   // Handle Share Button Click
   const handleShare = (post_id) => {
     // Increment share count in the UI
@@ -109,14 +105,12 @@ export default function HistoryPage() {
         ? { ...post, share_amount: post.share_amount + 1 }
         : post
     ));
-
     // Simulate sharing (e.g., copy link to clipboard)
     const postLink = `https://example.com/post/${post_id}`;
     navigator.clipboard.writeText(postLink)
       .then(() => alert("Post link copied to clipboard!"))
       .catch(() => alert("Failed to copy link."));
   };
-
   // Handle View Count (Simulate incrementing views)
   const handleView = (post_id) => {
     setPosts(Posts.map(post =>
@@ -125,7 +119,6 @@ export default function HistoryPage() {
         : post
     ));
   };
-
     // Function to fetch additional comments
 const fetchMoreComments = async (post_id) => {
     setVisibleCommentsCount(prev => ({
@@ -141,7 +134,6 @@ const handleCommentTextChange = (post_id, text) => {
       [post_id]: text,
     }));
   };
-
   // Add a comment to a post
 const addComment = async (post_id, comment_text) => {
     if (!user.isLoggedIn) {
@@ -183,7 +175,6 @@ const addComment = async (post_id, comment_text) => {
       console.error('Error adding comment:', error);
     }
   };
-  
 
   return (
     <div className="flex flex-col items-center min-h-screen text-white p-6">
@@ -220,6 +211,9 @@ const addComment = async (post_id, comment_text) => {
                 <div className="mt-2 text-sm text-gray-400">
                   <span>👁️ Views: {post.view_amount}</span>
                 </div>
+                <div className="mt-2 text-sm text-gray-400">
+                <span>🕒 Posted At: {new Date(post.timestamp).toLocaleString()}</span>
+              </div> 
             </div>
           ))
         ) : (

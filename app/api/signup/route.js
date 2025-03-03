@@ -7,15 +7,17 @@ import path from "path";
 // Function to open the SQLite database
 async function openDb() {
   return open({
-    filename: path.join(process.cwd(), "database.db"),//to point to root folder
+    filename: path.join(process.cwd(), "database.db"),//point to root folder
     driver: sqlite3.Database,
   });
 }
 
-// Handle POST requests to /api/signup
+// Handle POST requests to sign up api
 export async function POST(req) {
   try {
+
     const { email, username, password } = await req.json();
+    // open database
     const db = await openDb();
 
     // Check if user already exists
@@ -23,14 +25,13 @@ export async function POST(req) {
       `SELECT * FROM User WHERE user_email = ? OR user_username = ?`,
       [email, username]
     );
-
+    // If user already exists
     if (existingUser) {
       return NextResponse.json(
         { message: "User already exists" },
         { status: 400 }
       );
     }
-
     // Hash password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -40,15 +41,8 @@ export async function POST(req) {
       [email, username, hashedPassword]
     );
 
-    return NextResponse.json(
-      { message: "User created successfully" },
-      { status: 201 }
-    );
+    return NextResponse.json({status: 201});
   } catch (error) {
-    console.error("Signup error:", error);
-    return NextResponse.json(
-      { message: "An error occurred. Please try again." },
-      { status: 500 }
-    );
+    return NextResponse.json({status: 500});
   }
 }

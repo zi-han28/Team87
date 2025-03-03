@@ -15,14 +15,12 @@ function openDb() {
         });
     });
 }
-
-
 // Handle GET request to `/api/home`
 export async function GET(req) {
     try {
         const db = await openDb();
         const posts = await new Promise((resolve, reject) => {
-            db.all(`SELECT post_id, post_content, share_amount, view_amount, like_amount, user_username, post_savedindatabase 
+            db.all(`SELECT post_id, post_content, share_amount, view_amount, like_amount, user_username, post_savedindatabase, timestamp 
                 FROM Post ORDER BY post_id 
                 DESC LIMIT 5`, 
             (err, rows) => {
@@ -30,7 +28,6 @@ export async function GET(req) {
                 else resolve(rows);
             });
         });
-
         const postsWithComments = await Promise.all(
             posts.map(async (post) => {
                 const comments = await new Promise((resolve, reject) => {
@@ -48,8 +45,6 @@ export async function GET(req) {
                 return { ...post, comments }; // Add comments to the post object
             })
         );
-        
-
         return NextResponse.json(postsWithComments);
     } catch (error) {
         console.error("Database error:", error);
@@ -211,14 +206,26 @@ export async function POST(req) {
             });
 
             return NextResponse.json(comments);
-
         }
-        
+
+        else if (action === "incrementView") {
+            // Increment the view count in the database
+            await new Promise((resolve, reject) => {
+              db.run(
+                `UPDATE Post SET view_amount = view_amount + 1 WHERE post_id = ?`,
+                [post_id],
+                function (err) {
+                  if (err) reject(err);
+                  else resolve();
+                }
+              );
+            });
+      
+            return NextResponse.json({ message: "View count incremented successfully!" });
+          }
         else {
             return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-        }
-
-        
+        }     
 
     } catch (error) {
         console.error("Database error:", error);

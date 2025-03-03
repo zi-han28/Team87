@@ -14,9 +14,11 @@ async function openDb() {
     });
   }
 export async function GET(request, { params }) {
+  // fetch the appropriate chatroomId details
   const { chatroomId } = await params;
+  // open database
   const db = await openDb();
-
+// fetch the appropriate chatroom details
   return new Promise((resolve, reject) => {
     db.get('SELECT * FROM chatrooms WHERE id = ?', [chatroomId])
       .then((row) => {

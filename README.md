@@ -2,16 +2,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, install the appropriate dependencies, build the database and run the development server:
 
 ```bash
+npm install next react react-dom
+
+npm install bcryptjs
+
+npm install tailwindcss postcss autoprefixer
+
+npm install sqlite sqlite3
+
+npm install openai
+
+npm run build-db-win
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

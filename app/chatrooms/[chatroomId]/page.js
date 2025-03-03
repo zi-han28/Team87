@@ -1,6 +1,5 @@
 //frontend for [chatroomId]
 "use client";
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useUser } from "../../../components/UserContext";
@@ -10,7 +9,8 @@ export default function Chatroom() {
   const [chatroom, setChatroom] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const { user } = useUser(); // Get the logged-in user from context
+  // Get the logged-in user from context
+  const { user } = useUser();
 
   // Fetch chatroom details
   useEffect(() => {
@@ -37,20 +37,19 @@ export default function Chatroom() {
       alert("Failed to send message. Try logging in before sending a message.");
       return;
     }
-
     try {
       const response = await fetch("/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        // Use the logged-in user's details
         body: JSON.stringify({
           chatroomId,
-          sender: user.user_username, // Use the logged-in user's username
+          sender: user.user_username, 
           message: newMessage,
         }),
       });
-
       if (!response.ok) {
         throw new Error("Failed to send message");
       }
@@ -61,7 +60,7 @@ export default function Chatroom() {
         .then((response) => response.json())
         .then((data) => setMessages(data));
     } catch (err) {
-      console.error("Error sending message:", err);
+      // alert to show when user is not logged in
       alert("Failed to send message. Try logging in before sending a message.");
     }
   };
@@ -72,18 +71,16 @@ export default function Chatroom() {
 
   return (
     <div className="min-h-screen p-8">
+      {/* back button */}
       <button
         type="button"
         onClick={() => history.back()}
-        className="block p-4 rounded-lg shadow-md border border-gray-300 hover:bg-gray-200 hover:text-[#613DC1] hover:shadow-lg transition duration-300 bg-[#613DC1]"
-      >
+        className="block p-4 rounded-lg shadow-md border border-gray-300 hover:bg-gray-200 hover:text-[#613DC1] hover:shadow-lg transition duration-300 bg-[#613DC1]">
         <div className="flex flex-row align-middle">
           <svg
             className="w-5 mr-2 group-hover:fill-white transition duration-100"
             fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+            viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
@@ -93,11 +90,12 @@ export default function Chatroom() {
           <p className="ml-2">back</p>
         </div>
       </button>
-      <h1 className="text-3xl text-[#613DC1] text-center font-bold mb-8">
+      {/* display chatroom name */}
+      <h1 className="text-[60px] text-[#613DC1] text-center font-bold mb-8">
         {chatroom.name}
       </h1>
-      <div className="rounded-lg shadow-md p-4">
-        {/* Messages */}
+      <div className="border-[10px] border-indigo-500 rounded-lg shadow-md p-4">
+        {/* display messages */}
         <div className=" h-96 overflow-y-auto mb-4">
           {messages.map((message) => (
             <div key={message.id} className="flex">
@@ -112,24 +110,22 @@ export default function Chatroom() {
             </div>
           ))}
         </div>
-
-        {/* Message Input */}
+        {/* display message Input */}
         <form onSubmit={handleSendMessage} className="flex gap-2">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            className="flex-1 bg-gray-800 text-white p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            {/* submit button */}
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-          >
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
             Send
           </button>
         </form>
       </div>
     </div>
   );
-}
+};

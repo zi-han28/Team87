@@ -14,7 +14,6 @@ async function openDb() {
         }
     });
 }
-
 // Named export for `POST` request (REQUIRED for Next.js API)
 export async function POST(req) {
     return new Promise((resolve) => {
@@ -40,13 +39,11 @@ export async function POST(req) {
                         console.log("Matched Posts:", posts);
 
                         let messages = [{ role: "user", content: query }];
-
                         if (posts.length > 0) {
                             // Format post content for AI
                             const postContent = posts
                                 .map(post => `User: ${post.user_username}\nPost: ${post.post_content}`)
                                 .join("\n\n");
-
                             console.log("Sending to OpenAI with post context:", postContent);
 
                             messages.unshift({ role: "system", content: `Use these posts as context:\n${postContent}` });
@@ -69,7 +66,6 @@ export async function POST(req) {
                                 status: 200,
                                 headers: { "Content-Type": "application/json" }
                             }));
-
                         } catch (aiError) {
                             console.error("OpenAI API Error:", aiError);
                             return resolve(new Response(JSON.stringify({ error: "AI Processing Error" }), { status: 500 }));
@@ -77,7 +73,6 @@ export async function POST(req) {
                     }
                 );
             });
-
         } catch (error) {
             console.error("RAG API Error:", error);
             return resolve(new Response(JSON.stringify({ error: "Internal Server Error", details: error.message }), { status: 500 }));

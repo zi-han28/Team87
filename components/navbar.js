@@ -116,7 +116,7 @@ export default function Navbar() {
         <div className={`items-center ${isNavOpen ? "block" : "hidden"} w-full md:flex md:w-auto md:order-1`}>
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 space-x-12 md:flex-row">
             <li><Link href="/"  className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Home</Link></li>
-            <li><Link href="/chatrooms" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">chatrooms</Link></li>
+            <li><Link href="/chatrooms" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Chatrooms</Link></li>
             <li><Link href="/postingarea" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Post</Link></li>
             <li><Link href="/bookmark" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Bookmark</Link></li>
             <li><Link href="/history" className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white">Likes</Link></li>

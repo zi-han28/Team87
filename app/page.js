@@ -36,88 +36,85 @@ export default function Home() {
       setLoading(false);
     }
   };
-
-  // Fetch all posts and liked posts for the current user
-  const fetchData = async () => {
-    if (!current_user) {
-      console.error("current_user is undefined!");
-      return;
+  
+  // Fetch all posts
+const fetchPosts = async () => {
+  try {
+    const postsResponse = await fetch("/api/home");
+    if (!postsResponse.ok) {
+      throw new Error("Failed to fetch posts");
     }
+    const postsData = await postsResponse.json();
 
-    console.log("Fetching liked posts for:", current_user);
-    try {
-      // Fetch all posts
-      const postsResponse = await fetch("/api/home");
-      if (!postsResponse.ok) {
-        throw new Error("Failed to fetch posts");
-      }
-      const postsData = await postsResponse.json();
-      //setPosts(postsData);
-
-      // Initialize `comments` as an empty array if it doesn't exist
+    // Ensure `comments` exists as an array
     const postsWithComments = postsData.map(post => ({
       ...post,
-      comments: post.comments || [], // Ensure `comments` is an array
+      comments: post.comments || [],
     }));
 
     setPosts(postsWithComments);
-      // Initialize visible comments count (3 comments per post by default)
-      const initialVisibleComments = {};
-      postsData.forEach(post => {
-        initialVisibleComments[post.post_id] = 3; // Show 3 comments by default
-      });
+    
+  } catch (error) {
+    console.error("Error fetching homepage posts:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-      setVisibleCommentsCount(initialVisibleComments);
+// Fetch liked posts (only if user is logged in)
+const fetchLikedPosts = async () => {
+  if (!current_user) return; // Ensure function only runs if user exists
 
-      // Fetch liked posts for the current user
- 
-      const likedResponse = await fetch(`/api/history?user_username=${current_user}`);
-      if (!likedResponse.ok) {
-        throw new Error("Failed to fetch liked posts");
-      }
-      const likedData = await likedResponse.json();
-      console.log("API Response for Liked Posts:", likedData);
-
-      if (!Array.isArray(likedData)) {
-        console.error("Unexpected API response format:", data);
-        return;
-      }
-      // Initialize likedPosts state with post IDs of liked posts
-      const likedPostIds = new Set (likedData.map(post => post.post_id));
-      setLikedPosts(likedPostIds);
-      console.log("Extracted Liked Post IDs:", Array.from(likedPostIds));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
+  console.log("Fetching liked posts for:", current_user);
+  try {
+    const likedResponse = await fetch(`/api/history?user_username=${current_user}`);
+    if (!likedResponse.ok) {
+      throw new Error("Failed to fetch liked posts");
     }
-  };
+    const likedData = await likedResponse.json();
 
-  // Fetch all posts and liked posts for the current user
-  // Run fetchData when current_user changes
-  useEffect(() => {
-    if (current_user) {
-        fetchData();
+    if (!Array.isArray(likedData)) {
+      console.error("Unexpected API response format:", likedData);
+      return;
     }
-  }, [current_user]); // Re-run when current_user updates
 
-  // Fetch posts from database
-  useEffect(() => {
-    fetch("/api/home")
-      .then((res) => res.json())
-      .then((data) => {
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching homepage posts:", error);
-        setLoading(false);
-      });
-  }, []);
+    const likedPostIds = new Set(likedData.map(post => post.post_id));
+    setLikedPosts(likedPostIds);
+    console.log("Extracted Liked Post IDs:", Array.from(likedPostIds));
+  } catch (error) {
+    console.error("Error fetching liked posts:", error);
+  } finally {
+         setLoading(false);
+    }
+};
 
-  useEffect(() => {
-    console.log("Updated Liked Posts:", Array.from(likedPosts));
-  }, [likedPosts]);
+// Fetch all posts when the component mounts
+useEffect(() => {
+  fetchPosts();
+}, []);
+
+// Fetch liked posts only when a user is logged in
+useEffect(() => {
+  if (current_user) {
+    fetchLikedPosts();
+  }
+}, [current_user]);
+
+useEffect(() => {
+  if (!posts || !Array.isArray(posts)) return;
+
+  // Initialize visible comments count for each post if not set
+  setVisibleCommentsCount(prev => {
+    const updated = { ...prev };
+    posts.forEach(post => {
+      if (!(post.post_id in updated)) {
+        updated[post.post_id] = 3; // Limit to 3 comments initially
+      }
+    });
+    return updated;
+  });
+}, [posts]);
+
 
 
 return (
@@ -153,7 +150,9 @@ return (
       setLikedPosts={setLikedPosts} 
       setPosts={setPosts} 
       current_user={current_user}
-      fetchData={fetchData} />}
+      visibleCommentsCount={visibleCommentsCount}
+      setVisibleCommentsCount={setVisibleCommentsCount}
+      fetchData={fetchPosts} />}
       </div>
     </div>
   </div>

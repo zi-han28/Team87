@@ -2,10 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from "./UserContext";
 
-export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, fetchData}) {
+export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, visibleCommentsCount, setVisibleCommentsCount, fetchData}) {
   const { user } = useUser();
   const current_user = user.user_username;
-  const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
+  //const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
   const [commentTexts, setCommentTexts] = useState({});
 
     const handleLikeToggle = async (post_id) => {
@@ -29,7 +29,6 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, f
             else updatedLikedPosts.add(post_id);
 
             // // Persist in localStorage
-            // localStorage.setItem("likedPosts", JSON.stringify([...updatedLikedPosts]));
             return updatedLikedPosts;  // Ensure React re-renders
           });
       
@@ -75,19 +74,41 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, f
       };
       
       // Handle Share Button Click
-      const handleShare = (post_id) => {
-        // Increment share count in the UI
-        setPosts(posts.map(post =>
-          post.post_id === post_id
-            ? { ...post, share_amount: post.share_amount + 1 }
-            : post
-        ));
-    
-        // Simulate sharing (e.g., copy link to clipboard)
-        const postLink = `https://example.com/post/${post_id}`;
-        navigator.clipboard.writeText(postLink)
-          .then(() => alert("Post link copied to clipboard!"))
-          .catch(() => alert("Failed to copy link."));
+      const handleShare = async (post_id) => {
+        try {
+          // Optimistically update the UI first
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+                post.post_id === post_id
+                    ? { ...post, share_amount: post.share_amount + 1 }
+                    : post
+          ));
+
+          await fetch("/api/home", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ post_id, action: "incrementShare" }),
+          });
+
+          // Copy post link to clipboard
+          const postLink = `http://localhost:3000/`;
+          await navigator.clipboard.writeText(postLink);
+        
+          alert("Post link copied to clipboard!");
+  
+      } catch (error) {
+          console.error("Error updating share count:", error);
+          // Rollback UI update if request fails
+        setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+                post.post_id === post_id
+                    ? { ...post, share_amount: post.share_amount - 1 }
+                    : post
+            )
+        );
+
+          alert("Failed to share post.");
+      }
       };
     
       // Handle View Count (Simulate incrementing views)
@@ -117,7 +138,7 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, f
     const fetchMoreComments = async (post_id) => {
       setVisibleCommentsCount(prev => ({
         ...prev,
-        [post_id]: posts.find(post => post.post_id === post_id).comments.length, // Show all comments
+        [post_id]: (prev[post_id] || 3) + 3, // Load 3 more each time
       }));
     };
     
@@ -173,13 +194,17 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, f
 
     const hasViewed = useRef(new Set());
     useEffect(() => {
+      if (!Array.isArray(posts)) {
+        console.error("posts is not an array:", posts);
+        return; // Exit early to avoid the error
+      }
       posts.forEach((post) => {
         if (!hasViewed.current.has(post.post_id)) {
           hasViewed.current.add(post.post_id);
           handleView(post.post_id);
         }
       });
-    }, []);
+    }, [posts]);
     
   return (
     <div className="mt-4 space-y-4">
@@ -237,7 +262,7 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, f
 
             {/* Display Comments */}
             <div className="mt-4 space-y-2">
-              {post.comments?.slice(0, visibleCommentsCount[post.post_id]).map((comment) => (
+              {post.comments?.slice(0, visibleCommentsCount[post.post_id] || 3).map((comment) => (
                 <div key={comment.comment_id} className="p-2 bg-gray-800 rounded-lg">
                   <strong>{comment.user_username}: </strong>
                   {comment.comment_text}

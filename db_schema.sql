@@ -70,11 +70,9 @@ INSERT INTO Post (post_content, user_username, share_amount, view_amount, like_a
 ('5 Must-Read Sci-Fi Books This Year!', 'alex_wong', 5, 120, 30, 0, '2023-10-01 11:00:00');
 
 INSERT INTO Likes (user_username, post_id) VALUES
-('testuser', 1),
 ('alex_wong', 1),
 ('john_doe', 2),
-('jane_smith', 3),
-('testuser', 3);
+('jane_smith', 3);
 
 INSERT INTO comments (post_id, user_username, comment_text, created_at)
 VALUES 

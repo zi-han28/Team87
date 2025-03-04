@@ -54,6 +54,8 @@ export default function HistoryPage() {
                     setLikedPosts={setLikedPosts} 
                     setPosts={setPosts} 
                     current_user={current_user}
+                    visibleCommentsCount={visibleCommentsCount}
+                    setVisibleCommentsCount={setVisibleCommentsCount}
                     fetchData={fetchLikedPosts} />}
             </div>
     </div>

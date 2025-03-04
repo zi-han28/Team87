@@ -34,7 +34,7 @@ export default function Bookmark() {
   const fetchData = async () => {
     try {
       // Fetch all posts
-      const postsResponse = await fetch("/api/home");
+      const postsResponse = await fetch("/api/bookmark");
       if (!postsResponse.ok) {
         throw new Error("Failed to fetch posts");
       }
@@ -48,22 +48,23 @@ export default function Bookmark() {
         // Initialize visible comments count (3 comments per post by default)
         const initialVisibleComments = {};
         postsData.forEach(post => {
-          initialVisibleComments[post.post_id] = 3; // Show 3 comments by default
+          initialVisibleComments[post.post_id] = 1; // Show 3 comments by default
         });
   
         setVisibleCommentsCount(initialVisibleComments);
 
 
-      // Fetch liked posts for the current user
-      const likedResponse = await fetch(`/api/history?user_username=${current_user}`);
-      if (!likedResponse.ok) {
-        throw new Error("Failed to fetch liked posts");
-      }
-      const likedData = await likedResponse.json();
-
-      // Initialize likedPosts state with post IDs of liked posts
-      const likedPostIds = likedData.map(post => post.post_id);
-      setLikedPosts(new Set(likedPostIds));
+        if (current_user) {
+          const likedResponse = await fetch(`/api/history?user_username=${current_user}`);
+          if (!likedResponse.ok) {
+            throw new Error("Failed to fetch liked posts");
+          }
+          const likedData = await likedResponse.json();
+    
+          // Initialize likedPosts state with post IDs of liked posts
+          const likedPostIds = new Set(likedData.map(post => post.post_id));
+          setLikedPosts(likedPostIds);
+        }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -90,6 +91,8 @@ export default function Bookmark() {
               setLikedPosts={setLikedPosts} 
               setPosts={setBookmarkedPosts} 
               current_user={current_user}
+              visibleCommentsCount={visibleCommentsCount}
+              setVisibleCommentsCount={setVisibleCommentsCount}
               fetchData={fetchData} />}
       </div>
     </div>

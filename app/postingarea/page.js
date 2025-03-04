@@ -21,29 +21,13 @@ export default function PostingArea() {
         throw new Error("Failed to fetch posts: ${response.statusText}");
       }
       const data = await response.json();
-      console.log("Fetched data:", data);
-      setPosts(data);
+      const postsWithComments = data.map(post => ({
+        ...post,
+        comments: post.comments || [],
+      }));
+  
+      setPosts(postsWithComments);
 
-      // Initialize visible comments count (3 comments per post by default)
-      const initialVisibleComments = {};
-      data.forEach((post) => {
-        initialVisibleComments[post.post_id] = 3; // Show 3 comments by default
-      });
-      setVisibleCommentsCount(initialVisibleComments);
-
-      // Fetch liked posts for the current user
-      const user_username = user.user_username; // Replace with the logged-in user's username
-      const likedResponse = await fetch(
-        `/api/history?user_username=${user_username}`
-      );
-      if (!likedResponse.ok) {
-        throw new Error("Failed to fetch liked posts");
-      }
-      const likedData = await likedResponse.json();
-
-      // Initialize likedPosts state with post IDs of liked posts
-      const likedPostIds = likedData.map((post) => post.post_id);
-      setLikedPosts(new Set(likedPostIds));
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -51,18 +35,65 @@ export default function PostingArea() {
     }
   };
 
-  // Fetch posts from the database
-  useEffect(() => {
-        if (current_user) {
-            fetchPosts();
-        }
-      }, [current_user]);
+// Fetch liked posts (only if user is logged in)
+const fetchLikedPosts = async () => {
+  if (!current_user) return; // Ensure function only runs if user exists
+
+  console.log("Fetching liked posts for:", current_user);
+  try {
+    const likedResponse = await fetch(`/api/history?user_username=${current_user}`);
+    if (!likedResponse.ok) {
+      throw new Error("Failed to fetch liked posts");
+    }
+    const likedData = await likedResponse.json();
+
+    if (!Array.isArray(likedData)) {
+      console.error("Unexpected API response format:", likedData);
+      return;
+    }
+
+    const likedPostIds = new Set(likedData.map(post => post.post_id));
+    setLikedPosts(likedPostIds);
+    console.log("Extracted Liked Post IDs:", Array.from(likedPostIds));
+  } catch (error) {
+    console.error("Error fetching liked posts:", error);
+  } finally {
+         setLoading(false);
+    }
+};
+
+// Fetch all posts when the component mounts
+useEffect(() => {
+  fetchPosts();
+}, []);
+
+// Fetch liked posts only when a user is logged in
+useEffect(() => {
+  if (current_user) {
+    fetchLikedPosts();
+  }
+}, [current_user]);
+
+useEffect(() => {
+  if (!posts || !Array.isArray(posts)) return;
+
+  // Initialize visible comments count for each post if not set
+  setVisibleCommentsCount(prev => {
+    const updated = { ...prev };
+    posts.forEach(post => {
+      if (!(post.post_id in updated)) {
+        updated[post.post_id] = 3; // Limit to 3 comments initially
+      }
+    });
+    return updated;
+  });
+}, [posts]);
     
 
   // Handle adding a new post
   const handleAddPost = async () => {
     //check if user is logged in
-    if (!user.isLoggedIn) {
+    if (!current_user) {
       alert("Failed to post. Try logging in before posting.");
       return;
     }
@@ -87,6 +118,7 @@ export default function PostingArea() {
         // Add the new post at the top
         setNewPostText("");
         fetchPosts();
+        fetchLikedPosts();
       } catch (error) {
         console.error("Error adding post:", error);
       }
@@ -125,6 +157,8 @@ export default function PostingArea() {
                       setLikedPosts={setLikedPosts} 
                       setPosts={setPosts} 
                       current_user={current_user}
+                      visibleCommentsCount={visibleCommentsCount}
+                      setVisibleCommentsCount={setVisibleCommentsCount}
                       fetchData={fetchPosts} />}
               </div>
     </div>

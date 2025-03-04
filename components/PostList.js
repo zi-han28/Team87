@@ -240,8 +240,18 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, v
                 {post.post_savedindatabase === 1 ? "📌 Unsave" : "📌 Save"}
               </button>
 
-              {/* Comment Input */}
-              <div className="mt-1">
+              
+              {/* Add Comment Button */}
+              <button
+                className="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-600"
+                onClick={() => addComment(post.post_id, commentTexts[post.post_id])}
+              >
+                💬 Add Comment
+              </button>
+            </div>
+
+            {/* Comment Input */}
+            <div className="mt-1">
                 <textarea
                   className="w-full p-2 border rounded-lg bg-gray-800 text-white"
                   placeholder="Enter your comment..."
@@ -251,14 +261,6 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, v
                 />
               </div>
 
-              {/* Add Comment Button */}
-              <button
-                className="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-600 mt-2"
-                onClick={() => addComment(post.post_id, commentTexts[post.post_id])}
-              >
-                💬 Add Comment
-              </button>
-            </div>
 
             {/* Display Comments */}
             <div className="mt-4 space-y-2">

@@ -7,7 +7,7 @@ import PostList from "../components/PostList";
 export default function Home() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState("");
-
+  // fetch user details
   const { user } = useUser();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

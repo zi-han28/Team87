@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const {user, setUser} = useUser();
-
+  // fetch user image
   useEffect(() => {
     const fetchUserImage = async () => {
       try {

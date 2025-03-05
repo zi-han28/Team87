@@ -8,6 +8,7 @@ export default function PostingArea() {
   const [newPostText, setNewPostText] = useState("");
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
+  // fetch user logged in details
   const { user } = useUser();
   const [visibleCommentsCount, setVisibleCommentsCount] = useState({}); // { post_id: number }
 

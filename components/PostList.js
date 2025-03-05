@@ -211,8 +211,8 @@ export default function PostList({ posts, likedPosts, setLikedPosts, setPosts, v
       {posts.length > 0 ? (
         posts.map((post) => (
           <div key={post.post_id} className="p-4 border border-gray-400 rounded-lg bg-gray-900">
-            <h3 className="font-semibold">Posted by: {post.user_username}</h3>
-            <p className="text-sm">{post.post_content}</p>
+            <p className="text-sm">Posted by: {post.user_username}</p>
+            <h1 className="text-xl font-semibold">{post.post_content}</h1>
 
             <div className="flex space-x-2 mt-2">
               {/* Like Button */}

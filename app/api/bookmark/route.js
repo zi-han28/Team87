@@ -25,7 +25,24 @@ export async function GET() {
                 else resolve(rows);
             });
         });
-        return NextResponse.json(posts);
+        const postsWithComments = await Promise.all(
+            posts.map(async (post) => {
+                const comments = await new Promise((resolve, reject) => {
+                    db.all(
+                        `SELECT * FROM comments 
+                         WHERE post_id = ? 
+                         ORDER BY created_at DESC`,
+                        [post.post_id],
+                        (err, rows) => {
+                            if (err) reject(err);
+                            else resolve(rows);
+                        }
+                    );
+                });
+                return { ...post, comments }; // Add comments to the post object
+            })
+        );
+        return NextResponse.json(postsWithComments);
     } catch (error) {
         console.error("Database error:", error);
         return NextResponse.json({ error: "Database error", details: error.message }, { status: 500 });

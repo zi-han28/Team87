@@ -34,7 +34,7 @@ export default function SignUp() {
         setPassword("");
         setError(null);
         setShowAlert(false);
-        window.location.href = "/profile";
+        window.location.href = "/login";
       } else if(data.message == "User already exists"){
           setShowAlert(true);
       } 

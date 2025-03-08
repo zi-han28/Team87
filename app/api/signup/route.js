@@ -41,7 +41,7 @@ export async function POST(req) {
       [email, username, hashedPassword]
     );
 
-    return NextResponse.json({status: 201});
+    return NextResponse.json({message: "User created succesfully"} ,{status: 201});
   } catch (error) {
     return NextResponse.json({status: 500});
   }

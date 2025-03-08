@@ -207,6 +207,21 @@ export async function POST(req) {
 
             return NextResponse.json(comments);
         }
+        else if (action === "incrementShare") {
+            // Increment the share count in the database
+            await new Promise((resolve, reject) => {
+              db.run(
+                `UPDATE Post SET share_amount = share_amount + 1 WHERE post_id = ?`,
+                [post_id],
+                function (err) {
+                  if (err) reject(err);
+                  else resolve();
+                }
+              );
+            });
+
+            return NextResponse.json({ message: "Share count incremented successfully!" });
+        }
 
         else if (action === "incrementView") {
             // Increment the view count in the database

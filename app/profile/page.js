@@ -137,31 +137,52 @@ export default function Profile() {
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Recent Activity
           </h2>
-          {/* display recent activity as a list */}
-          <ul className="space-y-4">
-            {activities.map((activity, index) => (
-              <li key={index}>
-                {activity.type == "post" && (
-                  <div>
-                    <strong className="text-gray-700 whitespace-pre-line">Posted:</strong>  <p className="text-[#613dc1] whitespace-pre-line">{activity.post_content}</p>
-                  </div>
-                )}
-                {activity.type == "comment" && (
-                  <div>
-                    <strong className="text-gray-700 whitespace-pre-line">Commented:</strong> <p className="text-[#613dc1] whitespace-pre-line">{activity.comment_text}</p>
-                  </div>
-                )}
-                {activity.type == 'message'&&(
-                  <div>
-                    <strong className="text-gray-700 whitespace-pre-line">Messages:</strong> <p className="text-[#613dc1] whitespace-pre-line">{activity.message}</p>
-                  </div>
-                )
-                }
-                {/* display activity timestamp */}
-                <small className="text-gray-700 whitespace-pre-line">{new Date(activity.timestamp).toLocaleString()}</small>
-              </li>
-            ))}
-          </ul>
+         {/* display recent activity as a list */}
+         {activities && activities.length > 0 ? (
+            <ul className="space-y-4">
+              {activities.map((activity, index) => (
+                <li key={index}>
+                  {activity.type == "post" && (
+                    <div>
+                      <strong className="text-gray-700 whitespace-pre-line">
+                        Posted:
+                      </strong>{" "}
+                      <p className="text-[#613dc1] whitespace-pre-line">
+                        {activity.post_content}
+                      </p>
+                    </div>
+                  )}
+                  {activity.type == "comment" && (
+                    <div>
+                      <strong className="text-gray-700 whitespace-pre-line">
+                        Commented:
+                      </strong>{" "}
+                      <p className="text-[#613dc1] whitespace-pre-line">
+                        {activity.comment_text}
+                      </p>
+                    </div>
+                  )}
+                  {activity.type == "message" && (
+                    <div>
+                      <strong className="text-gray-700 whitespace-pre-line">
+                        Messages:
+                      </strong>{" "}
+                      <p className="text-[#613dc1] whitespace-pre-line">
+                        {activity.message}
+                      </p>
+                    </div>
+                  )}
+                  {/* display activity timestamp */}
+                  <small className="text-gray-700 whitespace-pre-line">
+                    {new Date(activity.timestamp).toLocaleString()}
+                  </small>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            // when there is no activity detected
+            <p className="text-gray-600">No recent activity.</p>
+          )}
         </div>
       </div>
     </div>

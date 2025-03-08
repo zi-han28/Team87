@@ -8,7 +8,8 @@ import { useUser } from '../../components/UserContext';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser } = useUser(); // Get the setUser function from context
+  // fetch user logged in details
+  const { setUser } = useUser(); 
 
   const handleSubmit =async(e) => {
     e.preventDefault();

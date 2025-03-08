@@ -5,8 +5,10 @@ import { useParams } from "next/navigation";
 import { useUser } from "../../../components/UserContext";
 
 export default function Chatroom() {
+    //fetch chatroom details
   const { chatroomId } = useParams();
   const [chatroom, setChatroom] = useState(null);
+  //fetch messages
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   // Get the logged-in user from context

@@ -88,13 +88,13 @@ export default function Navbar() {
           {/*Dropdown Menu */}
           {isDropdownOpen && user.isLoggedIn && (
             <div className="absolute right-[0px] top-[60px] mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700">
-              <div className="px-4 py-3">
+              <div className="px-4 py-3 text-black">
                 <span className="block text-sm">{user.user_username}</span>
                 <span className="block text-sm">{user.user_email}</span>
               </div>
-              <ul className="py-2">
-              <li><Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">Profile</Link></li>
-                <li><a onClick={handleSignOut} className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200">sign out</a></li>
+              <ul className="py-2 text-black">
+              <li><Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200">Profile</Link></li>
+                <li><a onClick={handleSignOut} className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white">sign out</a></li>
               </ul>
             </div>
           )}
